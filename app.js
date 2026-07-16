@@ -70,20 +70,39 @@ function connecterCurseur(idCurseur, idValeur) {
   });
 }
 
-function initialiserFormulaire() {
-  const formulaire = document.getElementById("formulaireJournee");
-  const message = document.getElementById("messageEtat");
+function initialiserCurseurs() {
+  connecterBargraphe("energiePY", "valeurEnergie");
+  connecterCurseur("moralPY", "valeurMoral");
+}
 
-  formulaire.addEventListener("submit", (evenement) => {
-    evenement.preventDefault();
+function connecterBargraphe(idBargraphe, idValeur) {
+  const bargraphe = document.getElementById(idBargraphe);
+  const valeur = document.getElementById(idValeur);
 
-    const donnees = construireDonneesJournee();
-    console.log("Données de test :", donnees);
+  bargraphe.querySelectorAll("button").forEach((bouton) => {
+    bouton.addEventListener("click", () => {
+      bargraphe.querySelectorAll("button").forEach((element) => {
+        element.classList.remove("active");
+      });
 
-    message.textContent = "Interface prête. Aucun envoi effectué dans ce premier lot.";
+      bouton.classList.add("active");
+
+      const nouvelleValeur = bouton.dataset.value;
+
+      bargraphe.dataset.value = nouvelleValeur;
+      valeur.textContent = nouvelleValeur;
+    });
   });
 }
 
+function connecterCurseur(idCurseur, idValeur) {
+  const curseur = document.getElementById(idCurseur);
+  const valeur = document.getElementById(idValeur);
+
+  curseur.addEventListener("input", () => {
+    valeur.textContent = curseur.value;
+  });
+}
 function construireDonneesJournee() {
   return {
     dateJournee: new Date().toISOString().slice(0, 10),
