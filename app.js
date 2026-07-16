@@ -21,7 +21,11 @@ function afficherDate() {
 }
 
 function afficherVersion() {
-  document.getElementById("versionApp").textContent = CONFIG.VERSION;
+  const elementVersion = document.getElementById("versionApp");
+
+  if (elementVersion) {
+    elementVersion.textContent = CONFIG.VERSION;
+  }
 }
 
 function initialiserChoix() {
@@ -118,27 +122,94 @@ function connecterCurseur(idCurseur, idValeur) {
 
 function initialiserFormulaire() {
   const formulaire = document.getElementById("formulaireJournee");
+  const boutonValider = document.getElementById("boutonValider");
   const message = document.getElementById("messageEtat");
 
-  if (!formulaire || !message) {
+  if (!formulaire || !boutonValider || !message) {
     return;
   }
 
-  formulaire.addEventListener("submit", (evenement) => {
+  formulaire.addEventListener("submit", async (evenement) => {
     evenement.preventDefault();
 
     const donnees = construireDonneesJournee();
 
-    console.log("Données de test :", donnees);
+    console.log("Données envoyées :", donnees);
 
-    message.textContent =
-      "Interface prête. Aucun envoi effectué dans ce premier lot.";
+    boutonValider.disabled = true;
+    boutonValider.textContent = "Enregistrement…";
+    message.textContent = "Envoi de la journée en cours…";
+
+    try {
+      const resultat = await envoyerJournee(donnees);
+
+      console.log("Réponse du serveur :", resultat);
+
+      if (!resultat.ok) {
+        throw new Error(
+          resultat.message ||
+          "Le serveur n’a pas pu enregistrer la journée."
+        );
+      }
+
+      boutonValider.textContent = "Journée enregistrée";
+      message.textContent = "La journée a bien été enregistrée.";
+
+      setTimeout(() => {
+        boutonValider.disabled = false;
+        boutonValider.textContent = "Valider la journée";
+      }, 2500);
+    } catch (erreur) {
+      console.error("Erreur d’enregistrement :", erreur);
+
+      message.textContent =
+        "Échec de l’enregistrement. Vérifiez la connexion puis recommencez.";
+
+      boutonValider.disabled = false;
+      boutonValider.textContent = "Valider la journée";
+    }
   });
+}
+
+async function envoyerJournee(donnees) {
+  if (!CONFIG.API_URL) {
+    throw new Error("L’adresse Apps Script n’est pas configurée.");
+  }
+
+  const reponse = await fetch(CONFIG.API_URL, {
+    method: "POST",
+    redirect: "follow",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(donnees)
+  });
+
+  if (!reponse.ok) {
+    throw new Error(`Erreur HTTP ${reponse.status}`);
+  }
+
+  const texteReponse = await reponse.text();
+
+  if (!texteReponse) {
+    throw new Error("Le serveur a renvoyé une réponse vide.");
+  }
+
+  try {
+    return JSON.parse(texteReponse);
+  } catch (erreur) {
+    console.error("Réponse non JSON :", texteReponse);
+
+    throw new Error(
+      "La réponse du serveur n’est pas exploitable."
+    );
+  }
 }
 
 function construireDonneesJournee() {
   return {
     dateJournee: obtenirDateLocale(),
+
     activites: valeursSelectionnees("activites"),
 
     therese: {
@@ -151,9 +222,11 @@ function construireDonneesJournee() {
       energie: Number(
         document.getElementById("energiePY").dataset.value
       ),
+
       moral: Number(
         document.getElementById("moralPY").value
       ),
+
       journee: valeurSelectionnee("journeePY")
     },
 
