@@ -95,11 +95,26 @@
       <section class="carte">
         <h2>Pierre-Yves</h2>
 
-        <label class="libelle-range" for="energiePY">
-          Mon énergie aujourd’hui
-          <strong><span id="valeurEnergie">5</span> / 10</strong>
-        </label>
-        <input type="range" id="energiePY" name="energiePY" min="0" max="10" value="5">
+      <label class="libelle-range">
+  Mon énergie aujourd’hui
+  <strong><span id="valeurEnergie">5</span> / 10</strong>
+</label>
+
+<div class="bargraph" id="energiePY" data-value="5">
+
+  <button type="button" data-value="0">0</button>
+  <button type="button" data-value="1">1</button>
+  <button type="button" data-value="2">2</button>
+  <button type="button" data-value="3">3</button>
+  <button type="button" data-value="4">4</button>
+  <button type="button" data-value="5" class="active">5</button>
+  <button type="button" data-value="6">6</button>
+  <button type="button" data-value="7">7</button>
+  <button type="button" data-value="8">8</button>
+  <button type="button" data-value="9">9</button>
+  <button type="button" data-value="10">10</button>
+
+</div>
 
         <label class="libelle-range" for="moralPY">
           Mon moral aujourd’hui
