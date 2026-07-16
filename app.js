@@ -2,7 +2,7 @@
  Projet : Pierre-Yves — Carnet de liaison numérique
  Fichier : app.js
  Version : MVP 0.9.0
- Build : 0003
+ Build : 0004
  Environnement : TEST
 
  Rôle :
@@ -13,7 +13,7 @@
  Lot :
  - suppression de l’ancien payload activites / therese / pierreYves ;
  - création directe du payload dateJournee / idRequete / reponses ;
- - conservation provisoire de la structure HTML existante.
+ - adaptation directe à l’interface GitHub actuellement validée.
 *****************************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -257,6 +257,14 @@ function creerErreurServeur(resultat) {
     return new Error(resultat.erreurs.join(" — "));
   }
 
+  if (
+    resultat.details &&
+    Array.isArray(resultat.details.erreurs) &&
+    resultat.details.erreurs.length > 0
+  ) {
+    return new Error(resultat.details.erreurs.join(" — "));
+  }
+
   if (resultat.message) {
     return new Error(resultat.message);
   }
@@ -350,149 +358,31 @@ function ajouterReponsesActivites(reponses) {
   const activites = valeursSelectionnees("activites")
     .map(normaliserValeur);
 
-  const repas = trouverValeurRepas(activites);
+  /*
+   * L’interface actuelle est volontairement simple.
+   * On traduit directement ses choix vers le référentiel.
+   */
 
-  if (repas) {
-    reponses["REP-006"] = repas;
-  }
+  reponses["REP-006"] = activites.includes("REPAS")
+    ? "CUISINE"
+    : "TOUT_PRET";
 
-  if (contientUneValeur(activites, [
-    "MENU",
-    "MENU_ELABORE"
-  ])) {
-    reponses["REP-001"] = "OUI";
-  }
-
-  if (contientUneValeur(activites, [
-    "REFRIGERATEUR",
-    "FRIGO",
-    "REFRIGERATEUR_VERIFIE"
-  ])) {
-    reponses["REP-002"] = "OUI";
-  }
-
-  if (contientUneValeur(activites, [
-    "LISTE_COURSES",
-    "LISTE_DE_COURSES"
-  ])) {
-    reponses["REP-003"] = "OUI";
-  }
-
-  if (contientUneValeur(activites, [
-    "COURSES",
-    "COURSES_EFFECTUEES"
-  ])) {
+  if (activites.includes("COURSES")) {
     reponses["REP-004"] = "OUI";
   }
 
-  if (contientUneValeur(activites, [
-    "COURSES_RANGEES",
-    "RANGER_COURSES"
-  ])) {
-    reponses["REP-005"] = "OUI";
+  reponses["MEN-001"] = activites.includes("MENAGE")
+    ? "OUI"
+    : "NON";
+
+  reponses["EXT-001"] = activites.includes("EXTERIEUR")
+    ? "OUI"
+    : "NON";
+
+  if (activites.includes("AUTRE")) {
+    reponses["SUI-005"] =
+      "Une autre activité a été réalisée aujourd’hui.";
   }
-
-  const zonesMenage = construireZonesMenage(activites);
-
-  reponses["MEN-001"] =
-    zonesMenage.length > 0 ? "OUI" : "NON";
-
-  if (zonesMenage.length > 0) {
-    reponses["MEN-002"] = zonesMenage;
-  }
-
-  const activitesExterieures =
-    construireActivitesExterieures(activites);
-
-  reponses["EXT-001"] =
-    activitesExterieures.length > 0 ? "OUI" : "NON";
-
-  if (activitesExterieures.length > 0) {
-    reponses["EXT-002"] = activitesExterieures;
-  }
-
-  if (contientUneValeur(activites, [
-    "INSTALLATION_REPAS",
-    "INSTALLER_THERESE_REPAS"
-  ])) {
-    reponses["ACC-001"] = "OUI";
-  }
-
-  if (contientUneValeur(activites, [
-    "INSTALLATION_NUIT",
-    "INSTALLER_THERESE_NUIT"
-  ])) {
-    reponses["ACC-002"] = "OUI";
-  }
-}
-
-
-function trouverValeurRepas(activites) {
-  const correspondances = {
-    CUISINE: "CUISINE",
-    REPAS_CUISINE: "CUISINE",
-    REPAS_CUISINE: "CUISINE",
-    CUISINER: "CUISINE",
-    REPAS_PREPARE: "PREPARE",
-    PREPARE: "PREPARE",
-    PREPARATION_SIMPLE: "PREPARE",
-    REPAS_SIMPLE: "PREPARE",
-    TOUT_PRET: "TOUT_PRET",
-    REPAS_PRET: "TOUT_PRET",
-    DEJA_PRET: "TOUT_PRET",
-    AUTRE_REPAS: "AUTRE"
-  };
-
-  for (const activite of activites) {
-    if (correspondances[activite]) {
-      return correspondances[activite];
-    }
-  }
-
-  return "";
-}
-
-
-function construireZonesMenage(activites) {
-  const correspondances = {
-    MENAGE_CUISINE: "CUISINE",
-    CUISINE_MENAGE: "CUISINE",
-    MENAGE_SALON: "SALON",
-    SALON: "SALON",
-    SEJOUR: "SALON",
-    MENAGE_CHAMBRE: "CHAMBRE",
-    CHAMBRE: "CHAMBRE",
-    SALLE_EAU: "SALLE_EAU",
-    TOILETTES: "SALLE_EAU",
-    SOLS: "SOLS",
-    LINGE: "LINGE",
-    RANGEMENT: "RANGEMENT",
-    AUTRE_MENAGE: "AUTRE"
-  };
-
-  return extraireValeursCorrespondantes(
-    activites,
-    correspondances
-  );
-}
-
-
-function construireActivitesExterieures(activites) {
-  const correspondances = {
-    COUR: "COUR",
-    TERRASSE: "COUR",
-    JARDIN: "JARDIN",
-    POUBELLES: "POUBELLES",
-    TRI: "POUBELLES",
-    PETIT_ENTRETIEN: "PETIT_ENTRETIEN",
-    ENTRETIEN_EXTERIEUR: "PETIT_ENTRETIEN",
-    AUTRE_EXTERIEUR: "AUTRE"
-  };
-
-  return extraireValeursCorrespondantes(
-    activites,
-    correspondances
-  );
 }
 
 
@@ -568,6 +458,7 @@ function convertirJourneePierreYves(valeur) {
 
     MOYEN: "MOYEN",
     MOYENNEMENT: "MOYEN",
+    NORMALEMENT: "MOYEN",
     MOYENNE: "MOYEN",
 
     DIFFICILE: "DIFFICILE",
@@ -595,14 +486,6 @@ function obtenirValeurNumerique(valeur) {
 *****************************************************************/
 
 function ajouterReponsesSuivi(reponses) {
-  /*
-   * L’interface actuelle ne possède pas encore de questions
-   * distinctes concernant les besoins et les problèmes.
-   *
-   * Ces deux réponses obligatoires sont donc positionnées à NON.
-   * Elles seront reliées à des contrôles dédiés lors du prochain lot HTML.
-   */
-
   reponses["SUI-001"] = "NON";
   reponses["SUI-003"] = "NON";
 
@@ -682,6 +565,22 @@ function verifierReponsesObligatoires(reponses) {
     );
   }
 
+  if (
+    !["OUI", "NON"].includes(reponses["SUI-001"])
+  ) {
+    erreurs.push(
+      "La réponse concernant le besoin est invalide."
+    );
+  }
+
+  if (
+    !["OUI", "NON"].includes(reponses["SUI-003"])
+  ) {
+    erreurs.push(
+      "La réponse concernant le problème est invalide."
+    );
+  }
+
   if (reponses["CLO-001"] !== true) {
     erreurs.push(
       "La journée n’est pas clôturée."
@@ -756,32 +655,4 @@ function normaliserValeur(valeur) {
     .replace(/[^a-zA-Z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
     .toUpperCase();
-}
-
-
-function contientUneValeur(valeurs, valeursRecherchees) {
-  return valeursRecherchees.some((valeur) =>
-    valeurs.includes(valeur)
-  );
-}
-
-
-function extraireValeursCorrespondantes(
-  valeurs,
-  correspondances
-) {
-  const resultat = [];
-
-  valeurs.forEach((valeur) => {
-    const valeurMetier = correspondances[valeur];
-
-    if (
-      valeurMetier &&
-      !resultat.includes(valeurMetier)
-    ) {
-      resultat.push(valeurMetier);
-    }
-  });
-
-  return resultat;
 }
