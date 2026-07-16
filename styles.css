@@ -93,7 +93,7 @@ legend {
 }
 
 .grille-choix.trois {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .choix {
@@ -127,12 +127,55 @@ legend {
   grid-column: 1 / -1;
 }
 
+.champ-bargraphe,
+.champ-range {
+  width: 100%;
+  margin-top: 20px;
+}
+
 .libelle-range {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 14px;
-  margin: 20px 0 8px;
+  width: 100%;
+  margin: 0 0 8px;
   font-weight: 700;
+}
+
+.libelle-range strong {
+  flex-shrink: 0;
+}
+
+.bargraph {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 4px;
+  width: 100%;
+}
+
+.bargraph button {
+  min-width: 0;
+  height: 46px;
+  padding: 0;
+  border: 2px solid #c8d0d8;
+  border-radius: 8px;
+  background: #f1f3f5;
+  color: #263238;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bargraph button:active {
+  transform: scale(0.96);
+}
+
+.bargraph button.active {
+  border-color: #176b3a;
+  background: #176b3a;
+  color: #ffffff;
+  transform: none;
 }
 
 input[type="range"] {
@@ -155,7 +198,11 @@ textarea {
   position: sticky;
   bottom: 0;
   padding: 12px 0 max(12px, env(safe-area-inset-bottom));
-  background: linear-gradient(to bottom, rgba(244, 246, 248, 0), #f4f6f8 24%);
+  background: linear-gradient(
+    to bottom,
+    rgba(244, 246, 248, 0),
+    #f4f6f8 24%
+  );
 }
 
 .bouton-principal {
@@ -193,55 +240,44 @@ textarea {
     padding-right: 10px;
   }
 
+  .carte {
+    padding: 16px 12px;
+  }
+
   .grille-choix.trois {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
   }
 
   .choix {
     min-height: 56px;
+    padding: 8px 5px;
+    font-size: 0.92rem;
+  }
+
+  .bargraph {
+    gap: 2px;
+  }
+
+  .bargraph button {
+    height: 44px;
+    border-radius: 6px;
+    font-size: 0.78rem;
   }
 }
-.champ-bargraphe {
-  width: 100%;
-  min-width: 0;
-  grid-column: 1 / -1;
-}
 
-.champ-bargraphe .libelle-range {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  margin-bottom: 8px;
-}
+@media (max-width: 360px) {
+  .bargraph {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 5px;
+  }
 
-.champ-bargraphe .libelle-range strong {
-  flex-shrink: 0;
-}
-.bargraph {
-  display: grid;
-  grid-template-columns: repeat(11, minmax(0, 1fr));
-  gap: 3px;
-  width: 100%;
-  margin-top: 8px;
-}
+  .bargraph button {
+    height: 42px;
+    font-size: 0.88rem;
+  }
 
-.bargraph button {
-  min-width: 0;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 7px;
-  background: #e9edf2;
-  color: #263238;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.bargraph button.active {
-  background: #1976d2;
-  color: #ffffff;
-  transform: scale(1.05);
+  .grille-choix.trois {
+    grid-template-columns: 1fr;
+  }
 }
