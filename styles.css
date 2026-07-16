@@ -201,3 +201,28 @@ textarea {
     min-height: 56px;
   }
 }
+.bargraph {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.bargraph button {
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: #e9edf2;
+  color: #263238;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bargraph button.active {
+  background: #1976d2;
+  color: #ffffff;
+  transform: scale(1.05);
+}
