@@ -112,11 +112,11 @@ function construireDonneesJournee() {
       sante: valeurSelectionnee("santeTherese"),
       mobilite: valeurSelectionnee("mobiliteTherese")
     },
-    pierreYves: {
-      energie: Number(document.getElementById("energiePY").value),
-      moral: Number(document.getElementById("moralPY").value),
-      journee: valeurSelectionnee("journeePY")
-    },
+   pierreYves: {
+  energie: Number(document.getElementById("energiePY").dataset.value),
+  moral: Number(document.getElementById("moralPY").value),
+  journee: valeurSelectionnee("journeePY")
+},
     remarque: document.getElementById("remarque").value.trim()
   };
 }
