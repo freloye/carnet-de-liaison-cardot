@@ -201,10 +201,29 @@ textarea {
     min-height: 56px;
   }
 }
+.champ-bargraphe {
+  width: 100%;
+  min-width: 0;
+  grid-column: 1 / -1;
+}
+
+.champ-bargraphe .libelle-range {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.champ-bargraphe .libelle-range strong {
+  flex-shrink: 0;
+}
 .bargraph {
   display: grid;
-  grid-template-columns: repeat(11, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
   margin-top: 8px;
 }
 
@@ -212,11 +231,11 @@ textarea {
   min-width: 0;
   height: 44px;
   padding: 0;
-  border: none;
-  border-radius: 8px;
+  border: 0;
+  border-radius: 7px;
   background: #e9edf2;
   color: #263238;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
 }
