@@ -6,12 +6,16 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 18px;
   color: #1f2933;
-  background: #f4f6f8;
+  background: #eef2f4;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #f4f6f8;
+  background: #eef2f4;
 }
 
 button,
@@ -22,74 +26,102 @@ textarea {
 
 button {
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .app {
   width: min(100%, 700px);
   margin: 0 auto;
-  padding: 16px 14px 40px;
+  padding: 12px 12px 42px;
 }
 
 .entete {
+  padding: 10px 6px 16px;
   text-align: center;
-  padding: 8px 6px 14px;
 }
 
 .entete h1 {
   margin: 4px 0 6px;
-  font-size: 1.7rem;
+  color: #1d2935;
+  font-size: 1.75rem;
+  line-height: 1.15;
 }
 
 .version {
+  display: inline-block;
   margin: 0;
-  font-size: 0.78rem;
-  font-weight: 700;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #dfe6ea;
+  color: #4d5964;
+  font-size: 0.72rem;
+  font-weight: 800;
   letter-spacing: 0.08em;
-  color: #56606b;
 }
 
 .date {
-  margin: 0;
+  margin: 8px 0 0;
+  color: #46515c;
   font-weight: 700;
-  color: #48525c;
 }
 
 .carte {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   padding: 18px 14px;
-  background: #ffffff;
-  border: 1px solid #d8dee5;
+  overflow: hidden;
+  border: 1px solid #d4dce2;
   border-radius: 18px;
-  box-shadow: 0 3px 12px rgba(31, 41, 51, 0.06);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(31, 41, 51, 0.07);
 }
 
 .carte h2 {
-  margin: 0 0 10px;
-  font-size: 1.25rem;
+  margin: 0 0 8px;
+  color: #1e2c37;
+  font-size: 1.3rem;
+  line-height: 1.2;
 }
 
 .aide {
-  margin: 0 0 14px;
-  color: #59636e;
-  font-size: 0.95rem;
+  margin: 0 0 12px;
+  color: #606b75;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 fieldset {
-  margin: 20px 0 0;
-  padding: 0;
-  border: 0;
+  margin: 14px 0 0;
+  padding: 13px 12px 14px;
+  border: 1px solid #dde3e8;
+  border-radius: 14px;
+  background: #f8fafb;
 }
 
 legend {
-  width: 100%;
-  margin-bottom: 9px;
-  font-weight: 700;
+  width: auto;
+  max-width: 100%;
+  margin-left: -2px;
+  padding: 0 7px;
+  color: #33414d;
+  background: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+fieldset .aide {
+  margin: 2px 0 9px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+fieldset .grille-choix + .aide {
+  margin-top: 14px;
 }
 
 .grille-choix {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .grille-choix.trois {
@@ -97,14 +129,35 @@ legend {
 }
 
 .choix {
-  min-height: 58px;
-  padding: 10px 8px;
-  border: 2px solid #c8d0d8;
-  border-radius: 14px;
+  min-width: 0;
+  min-height: 54px;
+  padding: 9px 8px;
+  border: 2px solid #cbd3da;
+  border-radius: 12px;
   background: #ffffff;
-  color: #25313c;
-  font-weight: 700;
+  color: #26333e;
+  font-size: 0.92rem;
+  font-weight: 750;
+  line-height: 1.2;
   cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease,
+    transform 0.08s ease;
+}
+
+.choix:hover {
+  border-color: #aeb9c2;
+}
+
+.choix:focus-visible,
+.bargraph button:focus-visible,
+.bouton-principal:focus-visible,
+textarea:focus-visible,
+input[type="range"]:focus-visible {
+  outline: 3px solid rgba(31, 111, 67, 0.25);
+  outline-offset: 2px;
 }
 
 .choix:active {
@@ -115,12 +168,20 @@ legend {
   border-color: #1f6f43;
   background: #dff3e7;
   color: #154c2e;
+  box-shadow: inset 0 0 0 1px rgba(31, 111, 67, 0.08);
+}
+
+.choix.neutre {
+  margin-top: 14px;
+  border-color: #b6c0c8;
+  background: #f1f3f5;
+  color: #48535d;
 }
 
 .choix.neutre.selectionne {
   border-color: #68737e;
-  background: #e8ebee;
-  color: #333d46;
+  background: #dde2e6;
+  color: #303942;
 }
 
 .largeur-complete {
@@ -130,103 +191,151 @@ legend {
 .champ-bargraphe,
 .champ-range {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 18px;
+  padding: 14px 12px;
+  border: 1px solid #dde3e8;
+  border-radius: 14px;
+  background: #f8fafb;
 }
 
 .libelle-range {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
-  margin: 0 0 8px;
-  font-weight: 700;
+  margin: 0 0 10px;
+  color: #33414d;
+  font-weight: 800;
+}
+
+.libelle-range span:first-child {
+  line-height: 1.25;
 }
 
 .libelle-range strong {
   flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #e2ece6;
+  color: #155331;
+  font-size: 0.95rem;
 }
 
 .bargraph {
   display: grid;
   grid-template-columns: repeat(11, minmax(0, 1fr));
-  gap: 4px;
+  gap: 3px;
   width: 100%;
 }
 
 .bargraph button {
   min-width: 0;
-  height: 46px;
+  height: 44px;
   padding: 0;
   border: 2px solid #c8d0d8;
-  border-radius: 8px;
-  background: #f1f3f5;
+  border-radius: 7px;
+  background: #ffffff;
   color: #263238;
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease,
+    transform 0.08s ease;
 }
 
 .bargraph button:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
 .bargraph button.active {
   border-color: #176b3a;
   background: #176b3a;
   color: #ffffff;
+  box-shadow: 0 2px 5px rgba(23, 107, 58, 0.22);
   transform: none;
 }
 
 input[type="range"] {
   width: 100%;
   min-height: 42px;
+  margin: 0;
   accent-color: #1f6f43;
+  cursor: pointer;
 }
 
 textarea {
   width: 100%;
-  min-height: 96px;
+  min-height: 90px;
   padding: 12px;
   border: 2px solid #c8d0d8;
-  border-radius: 14px;
+  border-radius: 12px;
   resize: vertical;
   background: #ffffff;
+  color: #26333e;
+  line-height: 1.4;
+}
+
+textarea::placeholder {
+  color: #7b858e;
+}
+
+textarea:focus {
+  border-color: #1f6f43;
 }
 
 .zone-validation {
   position: sticky;
+  z-index: 10;
   bottom: 0;
-  padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+  padding: 14px 0 max(12px, env(safe-area-inset-bottom));
   background: linear-gradient(
     to bottom,
-    rgba(244, 246, 248, 0),
-    #f4f6f8 24%
+    rgba(238, 242, 244, 0),
+    #eef2f4 24%
   );
 }
 
 .bouton-principal {
   width: 100%;
-  min-height: 64px;
+  min-height: 62px;
+  padding: 12px 18px;
   border: 0;
   border-radius: 16px;
   background: #176b3a;
   color: #ffffff;
+  font-size: 1.08rem;
   font-weight: 800;
-  font-size: 1.1rem;
-  box-shadow: 0 5px 14px rgba(23, 107, 58, 0.25);
   cursor: pointer;
+  box-shadow: 0 5px 14px rgba(23, 107, 58, 0.26);
+  transition:
+    background-color 0.12s ease,
+    transform 0.08s ease;
+}
+
+.bouton-principal:hover {
+  background: #135d32;
+}
+
+.bouton-principal:active {
+  transform: scale(0.99);
 }
 
 .bouton-principal:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .message-etat {
   min-height: 24px;
   margin: 8px 0 0;
+  color: #35414b;
   text-align: center;
+  font-size: 0.92rem;
   font-weight: 700;
 }
 
@@ -236,23 +345,51 @@ textarea {
   }
 
   .app {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 8px 9px 38px;
+  }
+
+  .entete {
+    padding-top: 8px;
+    padding-bottom: 13px;
+  }
+
+  .entete h1 {
+    font-size: 1.55rem;
   }
 
   .carte {
-    padding: 16px 12px;
+    margin-bottom: 11px;
+    padding: 15px 11px;
+    border-radius: 16px;
   }
 
-  .grille-choix.trois {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .carte h2 {
+    font-size: 1.22rem;
+  }
+
+  fieldset {
+    margin-top: 12px;
+    padding: 11px 9px 12px;
+  }
+
+  .grille-choix {
     gap: 7px;
   }
 
+  .grille-choix.trois {
+    gap: 6px;
+  }
+
   .choix {
-    min-height: 56px;
-    padding: 8px 5px;
-    font-size: 0.92rem;
+    min-height: 51px;
+    padding: 8px 6px;
+    font-size: 0.87rem;
+  }
+
+  .champ-bargraphe,
+  .champ-range {
+    margin-top: 14px;
+    padding: 12px 9px;
   }
 
   .bargraph {
@@ -260,24 +397,41 @@ textarea {
   }
 
   .bargraph button {
-    height: 44px;
+    height: 42px;
     border-radius: 6px;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
+  }
+
+  .bouton-principal {
+    min-height: 60px;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 370px) {
+  .app {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .grille-choix.trois {
+    grid-template-columns: 1fr;
+  }
+
+  .grille-choix.trois .choix {
+    min-height: 48px;
+  }
+
   .bargraph {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 5px;
   }
 
   .bargraph button {
-    height: 42px;
-    font-size: 0.88rem;
+    height: 40px;
+    font-size: 0.82rem;
   }
 
-  .grille-choix.trois {
-    grid-template-columns: 1fr;
+  .libelle-range {
+    align-items: flex-start;
   }
 }
