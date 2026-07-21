@@ -2,10 +2,12 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
+
   <meta name="theme-color" content="#f4f6f8">
 
   <title>Carnet de liaison Cardot</title>
@@ -18,7 +20,9 @@
 
     <header class="entete">
       <p class="version" id="versionApp">V0.9 TEST</p>
+
       <h1>Carnet de liaison</h1>
+
       <p class="date" id="dateJournee"></p>
     </header>
 
@@ -28,55 +32,338 @@
         <h2>Activités réalisées</h2>
 
         <p class="aide">
-          Touchez les activités faites aujourd’hui.
+          Touchez uniquement ce qui a été fait aujourd’hui.
         </p>
 
+        <fieldset>
+          <legend>Repas</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="repas_dejeuner"
+            >
+              Déjeuner préparé
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="repas_diner"
+            >
+              Dîner préparé
+            </button>
+
+          </div>
+
+          <p class="aide">
+            Type de repas préparé
+          </p>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="repas_achete"
+            >
+              Barquette ou plat acheté
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="repas_rechauffe"
+            >
+              Reste réchauffé
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple largeur-complete"
+              data-groupe="activites"
+              data-valeur="repas_mijote"
+            >
+              Plat mijoté
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Courses</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="courses"
+            >
+              Courses faites
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="courses_rangees"
+            >
+              Courses rangées
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Ménage</legend>
+
+          <p class="aide">
+            Pièces entretenues
+          </p>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_cuisine"
+            >
+              Cuisine
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_salle_de_bain"
+            >
+              Salle de bain
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_wc"
+            >
+              WC
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_salon"
+            >
+              Salon
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_couloir"
+            >
+              Couloir
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_chambre"
+            >
+              Chambre
+            </button>
+
+          </div>
+
+          <p class="aide">
+            Travail réalisé
+          </p>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_aspirateur"
+            >
+              Aspirateur
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_lavage_sol"
+            >
+              Lavage du sol
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_poussieres"
+            >
+              Poussières
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_sanitaires"
+            >
+              Sanitaires
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_cuisine_action"
+            >
+              Nettoyage cuisine
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="menage_rangement"
+            >
+              Rangement
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple largeur-complete"
+              data-groupe="activites"
+              data-valeur="menage_poubelles"
+            >
+              Poubelles
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Linge</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="linge_lessive"
+            >
+              Lessive
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="linge_etendage"
+            >
+              Étendage
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="linge_repassage"
+            >
+              Repassage
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="linge_rangement"
+            >
+              Linge rangé
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Extérieur</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple largeur-complete"
+              data-groupe="activites"
+              data-valeur="entretien_exterieur"
+            >
+              Entretien extérieur
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Démarches et courrier</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="demarches_administratives_medicales"
+            >
+              Démarches administratives ou médicales
+            </button>
+
+            <button
+              type="button"
+              class="choix multiple"
+              data-groupe="activites"
+              data-valeur="gestion_courrier"
+            >
+              Gestion du courrier
+            </button>
+
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Autre</legend>
+
+          <div class="grille-choix">
+
+            <button
+              type="button"
+              class="choix multiple largeur-complete"
+              data-groupe="activites"
+              data-valeur="autre"
+            >
+              Autre activité
+            </button>
+
+          </div>
+        </fieldset>
+
         <div class="grille-choix">
-
-          <button
-            type="button"
-            class="choix multiple"
-            data-groupe="activites"
-            data-valeur="repas"
-          >
-            Repas cuisiné
-          </button>
-
-          <button
-            type="button"
-            class="choix multiple"
-            data-groupe="activites"
-            data-valeur="courses"
-          >
-            Courses
-          </button>
-
-          <button
-            type="button"
-            class="choix multiple"
-            data-groupe="activites"
-            data-valeur="menage"
-          >
-            Ménage
-          </button>
-
-          <button
-            type="button"
-            class="choix multiple"
-            data-groupe="activites"
-            data-valeur="exterieur"
-          >
-            Entretien extérieur
-          </button>
-
-          <button
-            type="button"
-            class="choix multiple largeur-complete"
-            data-groupe="activites"
-            data-valeur="autre"
-          >
-            Autre activité
-          </button>
 
           <button
             type="button"
@@ -337,9 +624,7 @@
     </form>
   </main>
 
-   <script src="config.js?v=0004"></script>
+  <script src="config.js?v=0004"></script>
   <script src="app.js?v=0004"></script>
-</body>
-</html>
 </body>
 </html>
