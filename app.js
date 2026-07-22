@@ -2,7 +2,7 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0010
+ Build : 0011
 *****************************************************************/
 
 "use strict";
@@ -189,21 +189,12 @@ async function soumettre(evenement) {
 
     const requeteApi = {
       action: "CREER_SESSION",
-
-      donnees: {
-        payload: {
-          idRequete: payload.idRequete,
-          dateSaisie: payload.dateSaisie,
-          reponses: payload.reponses,
-          contexte: payload.contexte
-        }
-      },
-
-      options: {
-        auteur: "PIERRE_YVES"
-      },
-
-      idRequeteApi: genererIdRequeteApi()
+      applicationId: "APP_CARNET_CARDOT",
+      dateSaisie: payload.dateSaisie,
+      reponses: payload.reponses,
+      contexte: payload.contexte,
+      auteur: "PIERRE_YVES",
+      idRequete: payload.idRequete
     };
 
     console.log(
@@ -353,8 +344,7 @@ function construirePayload() {
       elementCloture.checked
     )
   };
-
-  if (reponses.REP_COURSES === "OUI") {
+   if (reponses.REP_COURSES === "OUI") {
     const elementMontant =
       document.getElementById("montantCourses");
 
@@ -595,26 +585,6 @@ function genererIdRequete() {
 
   return (
     "REQ-CARNET-" +
-    horodatage +
-    "-" +
-    aleatoire
-  );
-}
-
-function genererIdRequeteApi() {
-  const horodatage = new Date()
-    .toISOString()
-    .replace(/\D/g, "")
-    .slice(0, 14);
-
-  const aleatoire = Math.random()
-    .toString(16)
-    .slice(2, 10)
-    .toUpperCase()
-    .padEnd(8, "0");
-
-  return (
-    "API-CARNET-" +
     horodatage +
     "-" +
     aleatoire
