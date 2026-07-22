@@ -2,629 +2,244 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-
-  <meta name="theme-color" content="#f4f6f8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f4">
   <title>Carnet de liaison Cardot</title>
-
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=0007">
 </head>
-
 <body>
   <main class="app">
-
     <header class="entete">
-      <p class="version" id="versionApp">V0.9 TEST</p>
-
+      <p class="version" id="versionApp">V1.0 TEST — build 0007</p>
       <h1>Carnet de liaison</h1>
-
+      <p class="sous-titre">Ma journée, simplement</p>
       <p class="date" id="dateJournee"></p>
     </header>
 
-    <form id="formulaireJournee">
-
+    <form id="formulaireJournee" novalidate>
       <section class="carte">
-        <h2>Activités réalisées</h2>
-
-        <p class="aide">
-          Touchez uniquement ce qui a été fait aujourd’hui.
-        </p>
+        <h2>Situation de Thérèse</h2>
 
         <fieldset>
-          <legend>Repas</legend>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="repas_dejeuner"
-            >
-              Déjeuner préparé
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="repas_diner"
-            >
-              Dîner préparé
-            </button>
-
+          <legend>Moral</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique" data-groupe="THE_MORAL" data-valeur="MOINS_BIEN">Moins bon qu’hier</button>
+            <button type="button" class="choix unique" data-groupe="THE_MORAL" data-valeur="HABITUEL">Comme d’habitude</button>
+            <button type="button" class="choix unique" data-groupe="THE_MORAL" data-valeur="MIEUX">Meilleur qu’hier</button>
           </div>
+        </fieldset>
 
-          <p class="aide">
-            Type de repas préparé
-          </p>
+        <fieldset>
+          <legend>Santé générale</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique" data-groupe="THE_SANTE" data-valeur="MOINS_BIEN">Moins bien qu’hier</button>
+            <button type="button" class="choix unique" data-groupe="THE_SANTE" data-valeur="HABITUEL">Stable</button>
+            <button type="button" class="choix unique" data-groupe="THE_SANTE" data-valeur="MIEUX">Mieux qu’hier</button>
+          </div>
+        </fieldset>
 
-          <div class="grille-choix">
+        <fieldset>
+          <legend>Mobilité</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique" data-groupe="THE_MOBILITE" data-valeur="PLUS_DIFFICILE">Plus difficile</button>
+            <button type="button" class="choix unique" data-groupe="THE_MOBILITE" data-valeur="HABITUEL">Comme d’habitude</button>
+            <button type="button" class="choix unique" data-groupe="THE_MOBILITE" data-valeur="PLUS_FACILE">Plus facile</button>
+          </div>
+        </fieldset>
 
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="repas_achete"
-            >
-              Barquette ou plat acheté
-            </button>
+        <fieldset>
+          <legend>Appétit</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique observation" data-groupe="OBS_APPETIT" data-valeur="A peu mangé">A peu mangé</button>
+            <button type="button" class="choix unique observation" data-groupe="OBS_APPETIT" data-valeur="Normal">Normal</button>
+            <button type="button" class="choix unique observation" data-groupe="OBS_APPETIT" data-valeur="A bien mangé">A bien mangé</button>
+          </div>
+        </fieldset>
 
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="repas_rechauffe"
-            >
-              Reste réchauffé
-            </button>
+        <fieldset>
+          <legend>Sommeil de la nuit précédente</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique observation" data-groupe="OBS_SOMMEIL" data-valeur="Mauvais">Mauvais</button>
+            <button type="button" class="choix unique observation" data-groupe="OBS_SOMMEIL" data-valeur="Correct">Correct</button>
+            <button type="button" class="choix unique observation" data-groupe="OBS_SOMMEIL" data-valeur="Bon">Bon</button>
+          </div>
+        </fieldset>
+      </section>
 
-            <button
-              type="button"
-              class="choix multiple largeur-complete"
-              data-groupe="activites"
-              data-valeur="repas_mijote"
-            >
-              Plat mijoté
-            </button>
+      <section class="carte">
+        <h2>Repas et courses</h2>
 
+        <fieldset>
+          <legend>Déjeuner</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_MIJOTE">Plat mijoté</button>
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="RESTE_RECHAUFFE">Plat réchauffé</button>
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_ACHETE">Barquette</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Dîner</legend>
+          <div class="grille-choix trois">
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_MIJOTE">Plat mijoté</button>
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="RESTE_RECHAUFFE">Plat réchauffé</button>
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_ACHETE">Barquette</button>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Courses</legend>
-
           <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="courses"
-            >
-              Courses faites
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="courses_rangees"
-            >
-              Courses rangées
-            </button>
-
+            <button type="button" class="choix unique" data-groupe="REP_COURSES" data-valeur="NON">Aucune course</button>
+            <button type="button" class="choix unique" data-groupe="REP_COURSES" data-valeur="OUI">Courses effectuées</button>
+          </div>
+          <div id="zoneMontantCourses" class="zone-conditionnelle" hidden>
+            <label for="montantCourses">Montant des courses</label>
+            <div class="champ-montant">
+              <input id="montantCourses" type="number" min="0" max="1000" step="0.01" inputmode="decimal" placeholder="0,00">
+              <span>€</span>
+            </div>
           </div>
         </fieldset>
+      </section>
 
-        <fieldset>
-          <legend>Ménage</legend>
+      <section class="carte">
+        <h2>Ménage</h2>
+        <p class="aide">Sélectionne chaque action réellement effectuée dans chaque pièce.</p>
 
-          <p class="aide">
-            Pièces entretenues
-          </p>
+        <div class="table-menage" role="group" aria-label="Ménage par pièce et par action">
+          <div class="ligne-entete"><span>Pièce</span><span>Aspirateur</span><span>Poussière</span><span>Lavage</span></div>
 
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_cuisine"
-            >
-              Cuisine
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_salle_de_bain"
-            >
-              Salle de bain
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_wc"
-            >
-              WC
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_salon"
-            >
-              Salon
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_couloir"
-            >
-              Couloir
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_chambre"
-            >
-              Chambre
-            </button>
-
+          <div class="ligne-menage">
+            <strong>Cuisine</strong>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="ASPIRATEUR_CUISINE">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="POUSSIERE_CUISINE">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="LAVAGE_CUISINE">✓</button>
           </div>
 
-          <p class="aide">
-            Travail réalisé
-          </p>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_aspirateur"
-            >
-              Aspirateur
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_lavage_sol"
-            >
-              Lavage du sol
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_poussieres"
-            >
-              Poussières
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_sanitaires"
-            >
-              Sanitaires
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_cuisine_action"
-            >
-              Nettoyage cuisine
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="menage_rangement"
-            >
-              Rangement
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple largeur-complete"
-              data-groupe="activites"
-              data-valeur="menage_poubelles"
-            >
-              Poubelles
-            </button>
-
+          <div class="ligne-menage">
+            <strong>Salon / séjour</strong>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="ASPIRATEUR_SALON">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="POUSSIERE_SALON">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="LAVAGE_SALON">✓</button>
           </div>
-        </fieldset>
 
-        <fieldset>
-          <legend>Linge</legend>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="linge_lessive"
-            >
-              Lessive
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="linge_etendage"
-            >
-              Étendage
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="linge_repassage"
-            >
-              Repassage
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="linge_rangement"
-            >
-              Linge rangé
-            </button>
-
+          <div class="ligne-menage">
+            <strong>Chambre de Thérèse</strong>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="ASPIRATEUR_CHAMBRE">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="POUSSIERE_CHAMBRE">✓</button>
+            <button type="button" class="case-tache multiple" data-groupe="MEN_ACTIVITES" data-valeur="LAVAGE_CHAMBRE">✓</button>
           </div>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Extérieur</legend>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple largeur-complete"
-              data-groupe="activites"
-              data-valeur="entretien_exterieur"
-            >
-              Entretien extérieur
-            </button>
-
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Démarches et courrier</legend>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="demarches_administratives_medicales"
-            >
-              Démarches administratives ou médicales
-            </button>
-
-            <button
-              type="button"
-              class="choix multiple"
-              data-groupe="activites"
-              data-valeur="gestion_courrier"
-            >
-              Gestion du courrier
-            </button>
-
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Autre</legend>
-
-          <div class="grille-choix">
-
-            <button
-              type="button"
-              class="choix multiple largeur-complete"
-              data-groupe="activites"
-              data-valeur="autre"
-            >
-              Autre activité
-            </button>
-
-          </div>
-        </fieldset>
-
-        <div class="grille-choix">
-
-          <button
-            type="button"
-            class="choix multiple largeur-complete neutre"
-            data-groupe="activites"
-            data-valeur="aucune"
-          >
-            Aucune activité aujourd’hui
-          </button>
-
+        <div class="grille-choix extras">
+          <button type="button" class="choix multiple" data-groupe="MEN_ACTIVITES" data-valeur="SALLE_DE_BAIN">Salle de bains</button>
+          <button type="button" class="choix multiple" data-groupe="MEN_ACTIVITES" data-valeur="WC">WC</button>
+          <button type="button" class="choix multiple" data-groupe="MEN_ACTIVITES" data-valeur="COULOIR">Couloir / entrée</button>
+          <button type="button" class="choix multiple" data-groupe="MEN_ACTIVITES" data-valeur="RANGEMENT">Rangement</button>
+          <button type="button" class="choix multiple" data-groupe="MEN_ACTIVITES" data-valeur="POUBELLES">Poubelles / tri</button>
+          <button type="button" class="choix multiple neutre" data-groupe="MEN_ACTIVITES" data-valeur="AUCUN" data-exclusif="true">Aucun ménage aujourd’hui</button>
         </div>
       </section>
 
       <section class="carte">
-        <h2>Thérèse</h2>
-
-        <fieldset>
-          <legend>Moral</legend>
-
-          <div class="grille-choix trois">
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="moralTherese"
-              data-valeur="moins_bien"
-            >
-              Moins bien
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="moralTherese"
-              data-valeur="comme_habitude"
-            >
-              Comme d’habitude
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="moralTherese"
-              data-valeur="mieux"
-            >
-              Mieux
-            </button>
-
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>État de santé général</legend>
-
-          <div class="grille-choix trois">
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="santeTherese"
-              data-valeur="moins_bien"
-            >
-              Moins bien
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="santeTherese"
-              data-valeur="comme_habitude"
-            >
-              Comme d’habitude
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="santeTherese"
-              data-valeur="mieux"
-            >
-              Mieux
-            </button>
-
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Mobilité avec le déambulateur</legend>
-
-          <div class="grille-choix trois">
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="mobiliteTherese"
-              data-valeur="moins_bien"
-            >
-              Moins bien
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="mobiliteTherese"
-              data-valeur="comme_habitude"
-            >
-              Comme d’habitude
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="mobiliteTherese"
-              data-valeur="mieux"
-            >
-              Mieux
-            </button>
-
-          </div>
-        </fieldset>
+        <h2>Linge</h2>
+        <div class="grille-choix">
+          <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="LESSIVE">Lessive lancée</button>
+          <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="ETENDAGE">Linge étendu</button>
+          <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="RENTRE">Linge rentré</button>
+          <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="REPASSAGE">Linge plié / repassé</button>
+          <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="RANGEMENT">Linge rangé</button>
+          <button type="button" class="choix multiple neutre" data-groupe="LIN_ACTIVITES" data-valeur="AUCUN" data-exclusif="true">Aucun linge aujourd’hui</button>
+        </div>
       </section>
 
       <section class="carte">
-        <h2>Pierre-Yves</h2>
+        <h2>Entretien extérieur</h2>
+        <div class="grille-choix">
+          <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="TONTE">Tonte</button>
+          <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="DESHERBAGE">Désherbage</button>
+          <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="TAILLE">Taille</button>
+          <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="NETTOYAGE">Balayage / nettoyage</button>
+          <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="FEUILLES">Ramassage des feuilles</button>
+          <button type="button" class="choix multiple neutre" data-groupe="EXT_ACTIVITES" data-valeur="AUCUN" data-exclusif="true">Aucun entretien extérieur</button>
+        </div>
+      </section>
 
-        <div class="champ-bargraphe">
+      <section class="carte">
+        <h2>Autres activités</h2>
+        <div class="grille-choix">
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="BRICOLAGE">Bricolage</button>
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="DEMARCHES">Démarches administratives et médicales</button>
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="COURRIER">Gestion du courrier</button>
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="RENDEZ_VOUS">Rendez-vous</button>
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="ACCOMPAGNEMENT_THERESE">Accompagnement de Thérèse</button>
+          <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="ENTRETIEN_EQUIPEMENT">Entretien d’un équipement</button>
+          <button type="button" class="choix multiple neutre largeur-complete" data-groupe="AUT_ACTIVITES" data-valeur="AUCUNE" data-exclusif="true">Aucune autre activité aujourd’hui</button>
+        </div>
+      </section>
 
-          <div class="libelle-range">
-            <span>Mon énergie aujourd’hui</span>
+      <section class="carte">
+        <h2>Mon regard sur ma journée</h2>
 
-            <strong>
-              <span id="valeurEnergie">5</span> / 10
-            </strong>
-          </div>
-
-          <div
-            class="bargraph"
-            id="energiePY"
-            data-value="5"
-            role="group"
-            aria-label="Mon énergie aujourd’hui"
-          >
-
-            <button type="button" data-value="0">0</button>
-            <button type="button" data-value="1">1</button>
-            <button type="button" data-value="2">2</button>
-            <button type="button" data-value="3">3</button>
-            <button type="button" data-value="4">4</button>
-
-            <button
-              type="button"
-              data-value="5"
-              class="active"
-            >
-              5
-            </button>
-
-            <button type="button" data-value="6">6</button>
-            <button type="button" data-value="7">7</button>
-            <button type="button" data-value="8">8</button>
-            <button type="button" data-value="9">9</button>
-            <button type="button" data-value="10">10</button>
-
-          </div>
+        <div class="champ-range">
+          <label for="energiePY"><span>Mon énergie aujourd’hui</span><strong><span id="valeurEnergie">5</span> / 10</strong></label>
+          <input id="energiePY" type="range" min="0" max="10" step="1" value="5">
         </div>
 
         <div class="champ-range">
-
-          <label class="libelle-range" for="moralPY">
-            <span>Mon moral aujourd’hui</span>
-
-            <strong>
-              <span id="valeurMoral">5</span> / 10
-            </strong>
-          </label>
-
-          <input
-            type="range"
-            id="moralPY"
-            name="moralPY"
-            min="0"
-            max="10"
-            value="5"
-          >
-
+          <label for="moralPY"><span>Mon moral aujourd’hui</span><strong><span id="valeurMoral">5</span> / 10</strong></label>
+          <input id="moralPY" type="range" min="0" max="10" step="1" value="5">
         </div>
 
         <fieldset>
           <legend>Ma journée s’est passée</legend>
-
           <div class="grille-choix trois">
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="journeePY"
-              data-valeur="difficile"
-            >
-              Difficilement
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="journeePY"
-              data-valeur="normalement"
-            >
-              Normalement
-            </button>
-
-            <button
-              type="button"
-              class="choix unique"
-              data-groupe="journeePY"
-              data-valeur="bien"
-            >
-              Bien
-            </button>
-
+            <button type="button" class="choix unique" data-groupe="PY_JOURNEE" data-valeur="DIFFICILE">Difficile</button>
+            <button type="button" class="choix unique" data-groupe="PY_JOURNEE" data-valeur="MOYEN">Moyen</button>
+            <button type="button" class="choix unique" data-groupe="PY_JOURNEE" data-valeur="BIEN">Bien</button>
           </div>
         </fieldset>
       </section>
 
       <section class="carte">
+        <h2>Suivi et pense-bête</h2>
 
-        <label for="remarque">
-          <h2>Une remarque ?</h2>
+        <fieldset>
+          <legend>Y a-t-il un problème ?</legend>
+          <div class="grille-choix">
+            <button type="button" class="choix unique" data-groupe="SUI_PROBLEME" data-valeur="NON">Non</button>
+            <button type="button" class="choix unique" data-groupe="SUI_PROBLEME" data-valeur="OUI">Oui</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Y a-t-il un besoin ?</legend>
+          <div class="grille-choix">
+            <button type="button" class="choix unique" data-groupe="SUI_BESOIN" data-valeur="NON">Non</button>
+            <button type="button" class="choix unique" data-groupe="SUI_BESOIN" data-valeur="OUI">Oui</button>
+          </div>
+        </fieldset>
+
+        <label class="label-texte" for="remarque">Information importante pour le débriefing hebdomadaire</label>
+        <textarea id="remarque" rows="4" maxlength="500" placeholder="Facultatif"></textarea>
+      </section>
+
+      <section class="carte cloture">
+        <label class="confirmation">
+          <input id="clotureValidee" type="checkbox">
+          <span>Je confirme que la journée est terminée.</span>
         </label>
-
-        <textarea
-          id="remarque"
-          name="remarque"
-          rows="3"
-          maxlength="500"
-          placeholder="Facultatif"
-        ></textarea>
-
       </section>
 
       <div class="zone-validation">
-
-        <button
-          type="submit"
-          id="boutonValider"
-          class="bouton-principal"
-        >
-          Valider la journée
-        </button>
-
-        <p
-          id="messageEtat"
-          class="message-etat"
-          aria-live="polite"
-        ></p>
-
+        <button type="submit" id="boutonValider" class="bouton-principal">Valider la journée</button>
+        <p id="messageEtat" class="message-etat" aria-live="polite"></p>
       </div>
-
     </form>
   </main>
 
-  <script src="config.js?v=0004"></script>
-<script src="app.js?v=0006"></script>
+  <script src="config.js?v=0007"></script>
+  <script src="app.js?v=0007"></script>
 </body>
 </html>
