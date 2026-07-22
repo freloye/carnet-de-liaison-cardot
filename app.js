@@ -187,15 +187,28 @@ async function soumettre(evenement) {
       "information"
     );
 
-    const requeteApi = {
-      action: "CREER_SESSION",
+  const requeteApi = {
+  action: "CREER_SESSION",
+
+  donnees: {
+    payload: {
       applicationId: "APP_CARNET_CARDOT",
+      versionReferentiel: "V1.0.0",
+      buildReferentiel: "0001",
+      environnement: "TEST",
       dateSaisie: payload.dateSaisie,
-      reponses: payload.reponses,
+      idRequete: payload.idRequete,
       contexte: payload.contexte,
-      auteur: "PIERRE_YVES",
-      idRequete: payload.idRequete
-    };
+      reponses: payload.reponses
+    }
+  },
+
+  options: {
+    auteur: "PIERRE_YVES"
+  },
+
+  idRequeteApi: genererIdRequeteApi()
+};
 
     console.log(
       "Requête envoyée au Framework :",
@@ -571,7 +584,7 @@ function dateLocaleIso() {
   ].join("-");
 }
 
-function genererIdRequete() {
+function genererIdRequeteApi() {
   const horodatage = new Date()
     .toISOString()
     .replace(/\D/g, "")
@@ -584,7 +597,7 @@ function genererIdRequete() {
     .padEnd(8, "0");
 
   return (
-    "REQ-CARNET-" +
+    "API-CARNET-" +
     horodatage +
     "-" +
     aleatoire
