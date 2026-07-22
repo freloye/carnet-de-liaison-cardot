@@ -114,7 +114,19 @@ async function soumettre(evenement) {
       method: "POST",
       redirect: "follow",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+     body: JSON.stringify({
+  action: "CREER_SESSION",
+
+  donnees: {
+    payload: payload
+  },
+
+  options: {
+    auteur: "PIERRE_YVES"
+  },
+
+  idRequeteApi: genererIdRequeteApi()
+})
     });
 
     const texte = await reponse.text();
@@ -278,4 +290,23 @@ function genererIdRequete() {
   const horodatage = new Date().toISOString().replace(/\D/g, "").slice(0, 14);
   const aleatoire = Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, "0");
   return `REQ-CARNET-${horodatage}-${aleatoire}`;
+}
+function genererIdRequeteApi() {
+  const horodatage = new Date()
+    .toISOString()
+    .replace(/\D/g, "")
+    .slice(0, 14);
+
+  const aleatoire = Math.random()
+    .toString(16)
+    .slice(2, 10)
+    .toUpperCase()
+    .padEnd(8, "0");
+
+  return (
+    "API-CARNET-" +
+    horodatage +
+    "-" +
+    aleatoire
+  );
 }
