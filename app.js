@@ -603,25 +603,7 @@ function genererIdRequeteApi() {
     aleatoire
   );
 }
-function genererIdRequete() {
-  const horodatage = new Date()
-    .toISOString()
-    .replace(/\D/g, "")
-    .slice(0, 14);
 
-  const aleatoire = Math.random()
-    .toString(16)
-    .slice(2, 10)
-    .toUpperCase()
-    .padEnd(8, "0");
-
-  return (
-    "REQ-CARNET-" +
-    horodatage +
-    "-" +
-    aleatoire
-  );
-}
 function genererIdRequete() {
   const horodatage = new Date()
     .toISOString()
