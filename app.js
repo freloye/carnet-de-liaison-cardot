@@ -1,166 +1,103 @@
 /*****************************************************************
  Projet : Carnet de liaison Cardot
  Fichier : app.js
- Version : V0.9 TEST
- Build : 0006
- Environnement : TEST
+ Version : V1.0 TEST
+ Build : 0007
 *****************************************************************/
-
 "use strict";
 
-document.addEventListener("DOMContentLoaded", initialiserApplication);
+document.addEventListener("DOMContentLoaded", initialiser);
 
-function initialiserApplication() {
-  afficherVersionEtDate();
-  initialiserChoixMultiples();
-  initialiserChoixUniques();
-  initialiserEnergie();
-  initialiserMoral();
-  initialiserEnvoi();
+function initialiser() {
+  afficherEntete();
+  initialiserChoix();
+  initialiserCurseurs();
+  initialiserCourses();
+  document.getElementById("formulaireJournee").addEventListener("submit", soumettre);
 }
 
-function afficherVersionEtDate() {
-  const version = document.getElementById("versionApp");
-  const dateJournee = document.getElementById("dateJournee");
+function afficherEntete() {
+  const date = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  }).format(new Date());
+  document.getElementById("dateJournee").textContent =
+    date.charAt(0).toUpperCase() + date.slice(1);
 
-  if (version && typeof CONFIG !== "undefined" && CONFIG.VERSION) {
-    version.textContent = CONFIG.VERSION;
-  }
-
-  if (dateJournee) {
-    dateJournee.textContent = new Intl.DateTimeFormat("fr-FR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    }).format(new Date());
+  if (typeof CONFIG !== "undefined" && CONFIG.VERSION) {
+    document.getElementById("versionApp").textContent = CONFIG.VERSION;
   }
 }
 
-function initialiserChoixMultiples() {
-  document.querySelectorAll(".choix.multiple").forEach(function (bouton) {
+function initialiserChoix() {
+  document.querySelectorAll(".choix, .case-tache").forEach((bouton) => {
     bouton.setAttribute("aria-pressed", "false");
-
-    bouton.addEventListener("click", function () {
-      const valeur = bouton.dataset.valeur;
-
-      if (valeur === "aucune") {
-        const selectionner =
-          !bouton.classList.contains("selectionne");
-
-        document
-          .querySelectorAll('.choix.multiple[data-groupe="activites"]')
-          .forEach(function (autreBouton) {
-            autreBouton.classList.remove("selectionne");
-            autreBouton.setAttribute("aria-pressed", "false");
-          });
-
-        if (selectionner) {
-          bouton.classList.add("selectionne");
-          bouton.setAttribute("aria-pressed", "true");
-        }
-
-        return;
-      }
-
-      const boutonAucune = document.querySelector(
-        '.choix.multiple[data-valeur="aucune"]'
-      );
-
-      if (boutonAucune) {
-        boutonAucune.classList.remove("selectionne");
-        boutonAucune.setAttribute("aria-pressed", "false");
-      }
-
-      bouton.classList.toggle("selectionne");
-
-      bouton.setAttribute(
-        "aria-pressed",
-        bouton.classList.contains("selectionne")
-          ? "true"
-          : "false"
-      );
-    });
+    bouton.addEventListener("click", () => traiterChoix(bouton));
   });
 }
 
-function initialiserChoixUniques() {
-  document.querySelectorAll(".choix.unique").forEach(function (bouton) {
-    bouton.setAttribute("aria-pressed", "false");
+function traiterChoix(bouton) {
+  const groupe = bouton.dataset.groupe;
+  const estUnique = bouton.classList.contains("unique");
+  const estExclusif = bouton.dataset.exclusif === "true";
 
-    bouton.addEventListener("click", function () {
-      const groupe = bouton.dataset.groupe;
-
-      document
-        .querySelectorAll(
-          '.choix.unique[data-groupe="' + groupe + '"]'
-        )
-        .forEach(function (autreBouton) {
-          autreBouton.classList.remove("selectionne");
-          autreBouton.setAttribute("aria-pressed", "false");
-        });
-
-      bouton.classList.add("selectionne");
-      bouton.setAttribute("aria-pressed", "true");
-    });
-  });
-}
-
-function initialiserEnergie() {
-  const bargraph = document.getElementById("energiePY");
-  const affichage = document.getElementById("valeurEnergie");
-
-  if (!bargraph || !affichage) {
-    return;
+  if (estUnique) {
+    boutonsDuGroupe(groupe).forEach(deselectionner);
+    selectionner(bouton);
+  } else if (estExclusif) {
+    const activer = !bouton.classList.contains("selectionne");
+    boutonsDuGroupe(groupe).forEach(deselectionner);
+    if (activer) selectionner(bouton);
+  } else {
+    boutonsDuGroupe(groupe)
+      .filter((element) => element.dataset.exclusif === "true")
+      .forEach(deselectionner);
+    bouton.classList.contains("selectionne") ? deselectionner(bouton) : selectionner(bouton);
   }
 
-  bargraph.querySelectorAll("button").forEach(function (bouton) {
-    bouton.setAttribute(
-      "aria-pressed",
-      bouton.classList.contains("active") ? "true" : "false"
-    );
-
-    bouton.addEventListener("click", function () {
-      const valeur = bouton.dataset.value;
-
-      bargraph.dataset.value = valeur;
-      affichage.textContent = valeur;
-
-      bargraph.querySelectorAll("button").forEach(function (autreBouton) {
-        autreBouton.classList.remove("active");
-        autreBouton.setAttribute("aria-pressed", "false");
-      });
-
-      bouton.classList.add("active");
-      bouton.setAttribute("aria-pressed", "true");
-    });
-  });
+  if (groupe === "REP_COURSES") actualiserMontantCourses();
 }
 
-function initialiserMoral() {
-  const curseur = document.getElementById("moralPY");
-  const affichage = document.getElementById("valeurMoral");
-
-  if (!curseur || !affichage) {
-    return;
-  }
-
-  affichage.textContent = curseur.value;
-
-  curseur.addEventListener("input", function () {
-    affichage.textContent = curseur.value;
-  });
+function boutonsDuGroupe(groupe) {
+  return Array.from(document.querySelectorAll(`[data-groupe="${groupe}"]`));
 }
 
-function initialiserEnvoi() {
-  const formulaire = document.getElementById("formulaireJournee");
-
-  if (formulaire) {
-    formulaire.addEventListener("submit", envoyerJournee);
-  }
+function selectionner(element) {
+  element.classList.add("selectionne");
+  element.setAttribute("aria-pressed", "true");
 }
 
-async function envoyerJournee(evenement) {
+function deselectionner(element) {
+  element.classList.remove("selectionne");
+  element.setAttribute("aria-pressed", "false");
+}
+
+function initialiserCurseurs() {
+  connecterCurseur("energiePY", "valeurEnergie");
+  connecterCurseur("moralPY", "valeurMoral");
+}
+
+function connecterCurseur(idCurseur, idValeur) {
+  const curseur = document.getElementById(idCurseur);
+  const valeur = document.getElementById(idValeur);
+  valeur.textContent = curseur.value;
+  curseur.addEventListener("input", () => { valeur.textContent = curseur.value; });
+}
+
+function initialiserCourses() {
+  actualiserMontantCourses();
+}
+
+function actualiserMontantCourses() {
+  const courses = valeurUnique("REP_COURSES");
+  const zone = document.getElementById("zoneMontantCourses");
+  const montant = document.getElementById("montantCourses");
+  const visible = courses === "OUI";
+  zone.hidden = !visible;
+  montant.required = visible;
+  if (!visible) montant.value = "";
+}
+
+async function soumettre(evenement) {
   evenement.preventDefault();
 
   const bouton = document.getElementById("boutonValider");
@@ -168,364 +105,177 @@ async function envoyerJournee(evenement) {
 
   try {
     verifierConfiguration();
-
     const payload = construirePayload();
+    validerPayload(payload);
 
-    afficherEtat(
-      bouton,
-      message,
-      true,
-      "Envoi en cours…",
-      "information"
-    );
+    definirEtat(true, "Envoi en cours…", "information");
 
     const reponse = await fetch(CONFIG.API_URL, {
       method: "POST",
       redirect: "follow",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
 
     const texte = await reponse.text();
-
     let resultat;
-
     try {
       resultat = JSON.parse(texte);
-    } catch (erreur) {
-      throw new Error(
-        "La réponse du serveur n’est pas exploitable."
-      );
+    } catch {
+      throw new Error("La réponse du serveur n’est pas exploitable.");
     }
 
     if (!reponse.ok || !resultat || resultat.ok !== true) {
       throw new Error(
-        resultat && (resultat.message || resultat.code)
-          ? resultat.message || resultat.code
-          : "Erreur HTTP " + reponse.status
+        resultat?.message ||
+        resultat?.code ||
+        (Array.isArray(resultat?.erreurs) ? resultat.erreurs.join(" — ") : "") ||
+        `Erreur HTTP ${reponse.status}`
       );
     }
 
-    const identifiant =
-      resultat.idSession ||
-      (
-        resultat.creation &&
-        resultat.creation.idSession
-      ) ||
-      "";
-
-    afficherEtat(
-      bouton,
-      message,
-      false,
-      identifiant
-        ? "Journée enregistrée. Référence : " + identifiant
-        : "Journée enregistrée avec succès.",
-      "succes"
-    );
+    definirEtat(false, "Journée enregistrée avec succès.", "succes");
   } catch (erreur) {
-    console.error("Échec de l’envoi :", erreur);
+    console.error(erreur);
+    definirEtat(false, `Envoi impossible : ${erreur.message}`, "erreur");
+  }
 
-    afficherEtat(
-      bouton,
-      message,
-      false,
-      "Envoi impossible : " + erreur.message,
-      "erreur"
-    );
+  function definirEtat(enCours, texte, type) {
+    bouton.disabled = enCours;
+    bouton.textContent = enCours ? "Envoi en cours…" : "Valider la journée";
+    message.textContent = texte;
+    message.dataset.type = type;
   }
 }
 
 function construirePayload() {
-  const activites = valeursSelectionnees("activites");
-
-  const moralTherese = valeurUnique("moralTherese");
-  const santeTherese = valeurUnique("santeTherese");
-  const mobiliteTherese = valeurUnique("mobiliteTherese");
-  const journeePY = valeurUnique("journeePY");
-
-  if (!moralTherese) {
-    throw new Error("Sélectionne le moral de Thérèse.");
-  }
-
-  if (!santeTherese) {
-    throw new Error(
-      "Sélectionne l’état de santé de Thérèse."
-    );
-  }
-
-  if (!mobiliteTherese) {
-    throw new Error(
-      "Sélectionne la mobilité de Thérèse."
-    );
-  }
-
-  if (!journeePY) {
-    throw new Error(
-      "Indique comment s’est passée ta journée."
-    );
-  }
+  const remarque = construireRemarqueComplete();
 
   const reponses = {
-    "REP-004": activites.includes("courses")
-      ? "OUI"
-      : "NON",
+    THE_MORAL: valeurUnique("THE_MORAL"),
+    THE_SANTE: valeurUnique("THE_SANTE"),
+    THE_MOBILITE: valeurUnique("THE_MOBILITE"),
 
-    "REP-005": activites.includes("courses_rangees")
-      ? "OUI"
-      : "NON",
+    REP_DEJEUNER: valeurUnique("REP_DEJEUNER"),
+    REP_DINER: valeurUnique("REP_DINER"),
+    REP_COURSES: valeurUnique("REP_COURSES"),
 
-    "REP-006": determinerTypeRepas(activites),
+    MEN_ACTIVITES: valeursMultiples("MEN_ACTIVITES"),
+    LIN_ACTIVITES: valeursMultiples("LIN_ACTIVITES"),
+    EXT_ACTIVITES: valeursMultiples("EXT_ACTIVITES"),
+    AUT_ACTIVITES: valeursMultiples("AUT_ACTIVITES"),
 
-    "MEN-001": menageRealise(activites)
-      ? "OUI"
-      : "NON",
+    PY_ENERGIE: Number(document.getElementById("energiePY").value),
+    PY_MORAL: Number(document.getElementById("moralPY").value),
+    PY_JOURNEE: valeurUnique("PY_JOURNEE"),
 
-    "EXT-001": activites.includes("entretien_exterieur")
-      ? "OUI"
-      : "NON",
+    SUI_PROBLEME: valeurUnique("SUI_PROBLEME"),
+    SUI_BESOIN: valeurUnique("SUI_BESOIN"),
+    SUI_REMARQUE: remarque,
 
-    "THE-001": convertirTendance(moralTherese),
-    "THE-002": convertirTendance(santeTherese),
-    "THE-003": convertirTendance(mobiliteTherese),
-
-    "PY-001": Number(
-      document.getElementById("energiePY").dataset.value
-    ),
-
-    "PY-002": Number(
-      document.getElementById("moralPY").value
-    ),
-
-    "PY-003": convertirJournee(journeePY),
-
-    "SUI-001": "NON",
-    "SUI-003": "NON",
-    "SUI-005": construireRemarque(activites),
-
-    "CLO-001": true
+    CLO_VALIDEE: document.getElementById("clotureValidee").checked
   };
 
-  const zonesMenage = construireZonesMenage(activites);
-
-  if (zonesMenage.length > 0) {
-    reponses["MEN-002"] = zonesMenage;
-  }
-
-  if (activites.includes("entretien_exterieur")) {
-    reponses["EXT-002"] = ["PETIT_ENTRETIEN"];
+  if (reponses.REP_COURSES === "OUI") {
+    reponses.REP_MONTANT_COURSES = Number(
+      String(document.getElementById("montantCourses").value).replace(",", ".")
+    );
   }
 
   return {
     action: "CREER_SESSION",
     applicationId: "APP_CARNET_CARDOT",
     dateSaisie: dateLocaleIso(),
-    auteur: "PIERRE_YVES",
-    idRequete: genererIdRequete(),
-
+    reponses,
     contexte: {
       origine: "GITHUB_PAGES",
-      interface: "CARNET_CARDOT",
-      environnement: CONFIG.MODE_TEST ? "TEST" : "PROD"
+      interface: "CARNET_CARDOT_V1",
+      modeTest: Boolean(CONFIG.MODE_TEST),
+      url: window.location.href
     },
-
-    reponses: reponses
+    auteur: "PIERRE_YVES",
+    idRequete: genererIdRequete()
   };
 }
 
-function determinerTypeRepas(activites) {
-  if (activites.includes("repas_mijote")) {
-    return "CUISINE";
-  }
+function construireRemarqueComplete() {
+  const lignes = [];
+  const appetit = valeurUnique("OBS_APPETIT");
+  const sommeil = valeurUnique("OBS_SOMMEIL");
+  const remarque = document.getElementById("remarque").value.trim();
 
-  if (activites.includes("repas_rechauffe")) {
-    return "RESTE";
-  }
+  if (appetit) lignes.push(`Appétit de Thérèse : ${appetit}`);
+  if (sommeil) lignes.push(`Sommeil de Thérèse : ${sommeil}`);
+  if (remarque) lignes.push(remarque);
 
-  if (activites.includes("repas_achete")) {
-    return "BARQUETTE";
-  }
-
-  return "AUCUN";
+  return lignes.join(" — ");
 }
 
-function menageRealise(activites) {
-  return activites.some(function (activite) {
-    return (
-      activite.startsWith("menage_") ||
-      activite.startsWith("linge_")
-    );
-  });
-}
+function validerPayload(payload) {
+  const r = payload.reponses;
+  const obligatoires = [
+    ["THE_MORAL", "Sélectionne le moral de Thérèse."],
+    ["THE_SANTE", "Sélectionne la santé de Thérèse."],
+    ["THE_MOBILITE", "Sélectionne la mobilité de Thérèse."],
+    ["REP_DEJEUNER", "Sélectionne le déjeuner."],
+    ["REP_DINER", "Sélectionne le dîner."],
+    ["REP_COURSES", "Indique si des courses ont été effectuées."],
+    ["MEN_ACTIVITES", "Renseigne le ménage, même si aucun ménage n’a été fait."],
+    ["LIN_ACTIVITES", "Renseigne le linge, même si aucune activité n’a été faite."],
+    ["EXT_ACTIVITES", "Renseigne l’extérieur, même si aucun entretien n’a été fait."],
+    ["AUT_ACTIVITES", "Renseigne les autres activités, même si aucune n’a été faite."],
+    ["PY_JOURNEE", "Indique comment s’est passée ta journée."],
+    ["SUI_PROBLEME", "Indique s’il y a un problème."],
+    ["SUI_BESOIN", "Indique s’il y a un besoin."]
+  ];
 
-function construireZonesMenage(activites) {
-  const correspondances = {
-    menage_cuisine: "CUISINE",
-    menage_salle_de_bain: "SALLE_DE_BAIN",
-    menage_wc: "WC",
-    menage_salon: "SALON",
-    menage_couloir: "COULOIR",
-    menage_chambre: "CHAMBRE"
-  };
-
-  const zones = [];
-
-  activites.forEach(function (activite) {
-    const zone = correspondances[activite];
-
-    if (zone && !zones.includes(zone)) {
-      zones.push(zone);
+  for (const [id, texte] of obligatoires) {
+    if (Array.isArray(r[id]) ? r[id].length === 0 : !r[id]) {
+      throw new Error(texte);
     }
-  });
-
-  return zones;
-}
-
-function construireRemarque(activites) {
-  const remarque = document
-    .getElementById("remarque")
-    .value
-    .trim();
-
-  const complements = [];
-
-  if (
-    activites.includes(
-      "demarches_administratives_medicales"
-    )
-  ) {
-    complements.push(
-      "Démarches administratives ou médicales"
-    );
   }
 
-  if (activites.includes("gestion_courrier")) {
-    complements.push("Gestion du courrier");
+  if (r.REP_COURSES === "OUI") {
+    if (!Number.isFinite(r.REP_MONTANT_COURSES) || r.REP_MONTANT_COURSES < 0) {
+      throw new Error("Indique le montant des courses.");
+    }
   }
 
-  if (activites.includes("autre")) {
-    complements.push("Autre activité");
+  if (r.CLO_VALIDEE !== true) {
+    throw new Error("Confirme que la journée est terminée.");
   }
-
-  return [remarque].concat(complements)
-    .filter(Boolean)
-    .join(" — ");
-}
-
-function valeursSelectionnees(groupe) {
-  return Array.from(
-    document.querySelectorAll(
-      '.choix.selectionne[data-groupe="' +
-      groupe +
-      '"]'
-    )
-  ).map(function (bouton) {
-    return bouton.dataset.valeur;
-  });
 }
 
 function valeurUnique(groupe) {
-  const bouton = document.querySelector(
-    '.choix.selectionne[data-groupe="' +
-    groupe +
-    '"]'
-  );
-
-  return bouton ? bouton.dataset.valeur : "";
+  return document.querySelector(`[data-groupe="${groupe}"].selectionne`)?.dataset.valeur || "";
 }
 
-function convertirTendance(valeur) {
-  const correspondances = {
-    moins_bien: "MOINS_BIEN",
-    comme_habitude: "HABITUEL",
-    mieux: "MIEUX"
-  };
-
-  return correspondances[valeur] || "";
-}
-
-function convertirJournee(valeur) {
-  const correspondances = {
-    difficile: "DIFFICILE",
-    normalement: "MOYEN",
-    bien: "BIEN"
-  };
-
-  return correspondances[valeur] || "";
+function valeursMultiples(groupe) {
+  return Array.from(
+    document.querySelectorAll(`[data-groupe="${groupe}"].selectionne`)
+  ).map((element) => element.dataset.valeur);
 }
 
 function verifierConfiguration() {
   if (typeof CONFIG === "undefined") {
-    throw new Error(
-      "Le fichier config.js n’est pas chargé."
-    );
+    throw new Error("Le fichier config.js n’est pas chargé.");
   }
-
-  if (
-    !CONFIG.API_URL ||
-    !CONFIG.API_URL.startsWith("https://")
-  ) {
-    throw new Error(
-      "L’adresse de l’API est absente ou incorrecte."
-    );
-  }
-}
-
-function afficherEtat(
-  bouton,
-  message,
-  enCours,
-  texte,
-  type
-) {
-  if (bouton) {
-    bouton.disabled = enCours;
-
-    bouton.textContent = enCours
-      ? "Envoi en cours…"
-      : "Valider la journée";
-  }
-
-  if (message) {
-    message.textContent = texte;
-    message.dataset.type = type;
+  if (!CONFIG.API_URL || !CONFIG.API_URL.startsWith("https://")) {
+    throw new Error("L’adresse de l’API est absente ou incorrecte.");
   }
 }
 
 function dateLocaleIso() {
   const date = new Date();
-
-  const annee = date.getFullYear();
-
-  const mois = String(
-    date.getMonth() + 1
-  ).padStart(2, "0");
-
-  const jour = String(
-    date.getDate()
-  ).padStart(2, "0");
-
-  return annee + "-" + mois + "-" + jour;
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("-");
 }
 
 function genererIdRequete() {
-  const horodatage = new Date()
-    .toISOString()
-    .replace(/\D/g, "")
-    .slice(0, 14);
-
-  const aleatoire = Math.random()
-    .toString(16)
-    .slice(2, 10)
-    .toUpperCase()
-    .padEnd(8, "0");
-
-  return (
-    "REQ-CARNET-" +
-    horodatage +
-    "-" +
-    aleatoire
-  );
+  const horodatage = new Date().toISOString().replace(/\D/g, "").slice(0, 14);
+  const aleatoire = Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, "0");
+  return `REQ-CARNET-${horodatage}-${aleatoire}`;
 }
