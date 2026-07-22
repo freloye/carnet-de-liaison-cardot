@@ -137,14 +137,43 @@ async function soumettre(evenement) {
       throw new Error("La réponse du serveur n’est pas exploitable.");
     }
 
-    if (!reponse.ok || !resultat || resultat.ok !== true) {
-      throw new Error(
-        resultat?.message ||
-        resultat?.code ||
-        (Array.isArray(resultat?.erreurs) ? resultat.erreurs.join(" — ") : "") ||
-        `Erreur HTTP ${reponse.status}`
-      );
-    }
+   if (!reponse.ok || !resultat || resultat.ok !== true) {
+  console.error("Réponse complète du serveur :", resultat);
+
+  const erreurs =
+    resultat?.erreurs ||
+    resultat?.resultat?.erreurs ||
+    resultat?.donnees?.erreurs ||
+    resultat?.details?.erreurs ||
+    [];
+
+  const detailErreurs = Array.isArray(erreurs)
+    ? erreurs
+        .map(function (erreur) {
+          if (typeof erreur === "string") {
+            return erreur;
+          }
+
+          return [
+            erreur.code,
+            erreur.chemin || erreur.champ,
+            erreur.message
+          ]
+            .filter(Boolean)
+            .join(" — ");
+        })
+        .filter(Boolean)
+        .join(" | ")
+    : "";
+
+  throw new Error(
+    detailErreurs ||
+    resultat?.message ||
+    resultat?.resultat?.message ||
+    resultat?.code ||
+    "VALIDATION_ECHOUEE"
+  );
+}
 
     definirEtat(false, "Journée enregistrée avec succès.", "succes");
   } catch (erreur) {
