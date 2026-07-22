@@ -584,7 +584,7 @@ function dateLocaleIso() {
   ].join("-");
 }
 
-function genererIdRequete() {
+function genererIdRequeteApi() {
   const horodatage = new Date()
     .toISOString()
     .replace(/\D/g, "")
@@ -597,7 +597,7 @@ function genererIdRequete() {
     .padEnd(8, "0");
 
   return (
-    "REQ-CARNET-" +
+    "API-CARNET-" +
     horodatage +
     "-" +
     aleatoire
