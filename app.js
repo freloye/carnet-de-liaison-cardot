@@ -1,785 +1,531 @@
 /*****************************************************************
- Projet : Pierre-Yves — Carnet de liaison numérique
- Fichier : referentiel.gs
- Version : MVP 0.9.0
- Build : 0001
+ Projet : Carnet de liaison Cardot
+ Fichier : app.js
+ Version : V0.9 TEST
+ Build : 0006
  Environnement : TEST
-
- Rôle :
- - définir les catégories du formulaire ;
- - définir les items et leurs règles ;
- - définir les valeurs autorisées ;
- - servir de source unique pour l'installation, la validation,
-   la synthèse et, plus tard, l'interface GitHub Pages.
 *****************************************************************/
 
-const REFERENTIEL = Object.freeze({
+"use strict";
 
-  categories: Object.freeze([
-    {
-      id: 'CAT-REP',
-      ordre: 10,
-      nomTechnique: 'repas',
-      libelle: 'Repas et cuisine',
-      description: 'Activités liées aux repas, aux courses et à la cuisine.',
-      actif: true
-    },
-    {
-      id: 'CAT-MEN',
-      ordre: 20,
-      nomTechnique: 'menage',
-      libelle: 'Ménage',
-      description: 'Travaux de ménage réalisés dans la maison.',
-      actif: true
-    },
-    {
-      id: 'CAT-EXT',
-      ordre: 30,
-      nomTechnique: 'entretien_exterieur',
-      libelle: 'Entretien extérieur',
-      description: 'Travaux réalisés à l’extérieur de la maison.',
-      actif: true
-    },
-    {
-      id: 'CAT-ACC',
-      ordre: 40,
-      nomTechnique: 'accompagnement_therese',
-      libelle: 'Accompagnement de Thérèse',
-      description: 'Aides apportées à Thérèse dans la vie quotidienne.',
-      actif: true
-    },
-    {
-      id: 'CAT-THE',
-      ordre: 50,
-      nomTechnique: 'tendance_therese',
-      libelle: 'Comment va Thérèse ?',
-      description: 'Tendances observées par rapport à son état habituel ou à la veille.',
-      actif: true
-    },
-    {
-      id: 'CAT-PY',
-      ordre: 60,
-      nomTechnique: 'tendance_pierre_yves',
-      libelle: 'Comment va Pierre-Yves ?',
-      description: 'Autoévaluation simple de Pierre-Yves sur sa journée.',
-      actif: true
-    },
-    {
-      id: 'CAT-SUI',
-      ordre: 70,
-      nomTechnique: 'suivi',
-      libelle: 'Besoins, problèmes et remarques',
-      description: 'Informations nécessitant une attention ou une action.',
-      actif: true
-    },
-    {
-      id: 'CAT-CLO',
-      ordre: 80,
-      nomTechnique: 'cloture',
-      libelle: 'Clôture de la journée',
-      description: 'Validation globale avant envoi.',
-      actif: true
-    }
-  ]),
+document.addEventListener("DOMContentLoaded", initialiserApplication);
 
-  jeuxValeurs: Object.freeze({
-
-    'VAL-OUI-NON': Object.freeze([
-      { code: 'OUI', ordre: 10, libelle: 'Oui', valeur: 'OUI', severite: 0 },
-      { code: 'NON', ordre: 20, libelle: 'Non', valeur: 'NON', severite: 0 }
-    ]),
-
-    'VAL-OUI-NON-NA': Object.freeze([
-      { code: 'OUI', ordre: 10, libelle: 'Oui', valeur: 'OUI', severite: 0 },
-      { code: 'NON', ordre: 20, libelle: 'Non', valeur: 'NON', severite: 0 },
-      { code: 'NA', ordre: 30, libelle: 'Non concerné', valeur: 'NA', severite: 0 }
-    ]),
-
-    'VAL-REPAS': Object.freeze([
-      { code: 'CUISINE', ordre: 10, libelle: 'J’ai cuisiné le repas', valeur: 'CUISINE', severite: 0 },
-      { code: 'PREPARE', ordre: 20, libelle: 'J’ai préparé quelque chose de simple', valeur: 'PREPARE', severite: 0 },
-      { code: 'TOUT_PRET', ordre: 30, libelle: 'Le repas était déjà prêt', valeur: 'TOUT_PRET', severite: 0 },
-      { code: 'AUTRE', ordre: 40, libelle: 'Autre situation', valeur: 'AUTRE', severite: 0 }
-    ]),
-
-    'VAL-MENAGE': Object.freeze([
-      { code: 'OUI', ordre: 10, libelle: 'Oui, du ménage a été fait', valeur: 'OUI', severite: 0 },
-      { code: 'NON', ordre: 20, libelle: 'Il n’y a pas eu de ménage aujourd’hui', valeur: 'NON', severite: 0 }
-    ]),
-
-    'VAL-ZONES-MENAGE': Object.freeze([
-      { code: 'CUISINE', ordre: 10, libelle: 'Cuisine', valeur: 'CUISINE', severite: 0 },
-      { code: 'SALON', ordre: 20, libelle: 'Salon / séjour', valeur: 'SALON', severite: 0 },
-      { code: 'CHAMBRE', ordre: 30, libelle: 'Chambre', valeur: 'CHAMBRE', severite: 0 },
-      { code: 'SALLE_EAU', ordre: 40, libelle: 'Salle d’eau / toilettes', valeur: 'SALLE_EAU', severite: 0 },
-      { code: 'SOLS', ordre: 50, libelle: 'Sols', valeur: 'SOLS', severite: 0 },
-      { code: 'LINGE', ordre: 60, libelle: 'Linge', valeur: 'LINGE', severite: 0 },
-      { code: 'RANGEMENT', ordre: 70, libelle: 'Rangement', valeur: 'RANGEMENT', severite: 0 },
-      { code: 'AUTRE', ordre: 80, libelle: 'Autre', valeur: 'AUTRE', severite: 0 }
-    ]),
-
-    'VAL-EXT': Object.freeze([
-      { code: 'COUR', ordre: 10, libelle: 'Cour / terrasse', valeur: 'COUR', severite: 0 },
-      { code: 'JARDIN', ordre: 20, libelle: 'Jardin', valeur: 'JARDIN', severite: 0 },
-      { code: 'POUBELLES', ordre: 30, libelle: 'Poubelles / tri', valeur: 'POUBELLES', severite: 0 },
-      { code: 'PETIT_ENTRETIEN', ordre: 40, libelle: 'Petit entretien', valeur: 'PETIT_ENTRETIEN', severite: 0 },
-      { code: 'AUTRE', ordre: 50, libelle: 'Autre activité', valeur: 'AUTRE', severite: 0 }
-    ]),
-
-    'VAL-TENDANCE': Object.freeze([
-      { code: 'MIEUX', ordre: 10, libelle: 'Mieux que d’habitude / qu’hier', valeur: 'MIEUX', severite: 0 },
-      { code: 'HABITUEL', ordre: 20, libelle: 'Comme d’habitude', valeur: 'HABITUEL', severite: 0 },
-      { code: 'MOINS_BIEN', ordre: 30, libelle: 'Moins bien que d’habitude / qu’hier', valeur: 'MOINS_BIEN', severite: 1 }
-    ]),
-
-    'VAL-JOURNEE-PY': Object.freeze([
-      { code: 'BIEN', ordre: 10, libelle: 'Bien', valeur: 'BIEN', severite: 0 },
-      { code: 'MOYEN', ordre: 20, libelle: 'Moyennement', valeur: 'MOYEN', severite: 0 },
-      { code: 'DIFFICILE', ordre: 30, libelle: 'Difficilement', valeur: 'DIFFICILE', severite: 1 }
-    ])
-  }),
-
-  items: Object.freeze([
-
-    {
-      id: 'REP-001',
-      categorie: 'CAT-REP',
-      ordre: 10,
-      nomTechnique: 'menu_elabore',
-      libelle: 'Menu élaboré',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-002',
-      categorie: 'CAT-REP',
-      ordre: 20,
-      nomTechnique: 'refrigerateur_verifie',
-      libelle: 'Réfrigérateur vérifié',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-003',
-      categorie: 'CAT-REP',
-      ordre: 30,
-      nomTechnique: 'liste_courses_preparee',
-      libelle: 'Liste de courses préparée',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-004',
-      categorie: 'CAT-REP',
-      ordre: 40,
-      nomTechnique: 'courses_effectuees',
-      libelle: 'Courses effectuées',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-005',
-      categorie: 'CAT-REP',
-      ordre: 50,
-      nomTechnique: 'courses_rangees',
-      libelle: 'Courses rangées',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-006',
-      categorie: 'CAT-REP',
-      ordre: 60,
-      nomTechnique: 'repas_prepare',
-      libelle: 'Repas du jour',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-REPAS',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'REP-007',
-      categorie: 'CAT-REP',
-      ordre: 70,
-      nomTechnique: 'autre_activite_cuisine',
-      libelle: 'Autre activité liée aux repas',
-      typeReponse: 'TEXTE_COURT',
-      obligatoire: false,
-      multiple: false,
-      longueurMax: 160,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'MEN-001',
-      categorie: 'CAT-MEN',
-      ordre: 10,
-      nomTechnique: 'menage_realise',
-      libelle: 'Ménage aujourd’hui',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-MENAGE',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'MEN-002',
-      categorie: 'CAT-MEN',
-      ordre: 20,
-      nomTechnique: 'zones_menage',
-      libelle: 'Zones entretenues',
-      typeReponse: 'CHOIX_MULTIPLE',
-      jeuValeurs: 'VAL-ZONES-MENAGE',
-      obligatoire: false,
-      multiple: true,
-      nombreMaxChoix: 8,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'MEN-003',
-      categorie: 'CAT-MEN',
-      ordre: 30,
-      nomTechnique: 'autre_activite_menage',
-      libelle: 'Autre activité de ménage',
-      typeReponse: 'TEXTE_COURT',
-      obligatoire: false,
-      multiple: false,
-      longueurMax: 160,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'EXT-001',
-      categorie: 'CAT-EXT',
-      ordre: 10,
-      nomTechnique: 'entretien_exterieur_realise',
-      libelle: 'Entretien extérieur aujourd’hui',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'EXT-002',
-      categorie: 'CAT-EXT',
-      ordre: 20,
-      nomTechnique: 'activites_exterieures',
-      libelle: 'Activités extérieures réalisées',
-      typeReponse: 'CHOIX_MULTIPLE',
-      jeuValeurs: 'VAL-EXT',
-      obligatoire: false,
-      multiple: true,
-      nombreMaxChoix: 5,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'EXT-003',
-      categorie: 'CAT-EXT',
-      ordre: 30,
-      nomTechnique: 'autre_activite_exterieure',
-      libelle: 'Autre activité extérieure',
-      typeReponse: 'TEXTE_COURT',
-      obligatoire: false,
-      multiple: false,
-      longueurMax: 160,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'ACC-001',
-      categorie: 'CAT-ACC',
-      ordre: 10,
-      nomTechnique: 'installation_repas',
-      libelle: 'Thérèse installée pour le repas',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON-NA',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'ACC-002',
-      categorie: 'CAT-ACC',
-      ordre: 20,
-      nomTechnique: 'installation_nuit',
-      libelle: 'Thérèse installée pour la nuit',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON-NA',
-      obligatoire: false,
-      multiple: false,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'ACC-003',
-      categorie: 'CAT-ACC',
-      ordre: 30,
-      nomTechnique: 'autre_accompagnement',
-      libelle: 'Autre accompagnement réalisé',
-      typeReponse: 'TEXTE_COURT',
-      obligatoire: false,
-      multiple: false,
-      longueurMax: 160,
-      usage: 'Synthèse des activités',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'THE-001',
-      categorie: 'CAT-THE',
-      ordre: 10,
-      nomTechnique: 'tendance_moral_therese',
-      libelle: 'Moral de Thérèse',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-TENDANCE',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'THE-002',
-      categorie: 'CAT-THE',
-      ordre: 20,
-      nomTechnique: 'tendance_sante_therese',
-      libelle: 'État de santé général',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-TENDANCE',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'THE-003',
-      categorie: 'CAT-THE',
-      ordre: 30,
-      nomTechnique: 'tendance_mobilite_therese',
-      libelle: 'Mobilité avec le déambulateur',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-TENDANCE',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'PY-001',
-      categorie: 'CAT-PY',
-      ordre: 10,
-      nomTechnique: 'energie_pierre_yves',
-      libelle: 'Mon énergie aujourd’hui',
-      typeReponse: 'ECHELLE',
-      obligatoire: true,
-      multiple: false,
-      valeurMin: 0,
-      valeurMax: 10,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'PY-002',
-      categorie: 'CAT-PY',
-      ordre: 20,
-      nomTechnique: 'moral_pierre_yves',
-      libelle: 'Mon moral aujourd’hui',
-      typeReponse: 'ECHELLE',
-      obligatoire: true,
-      multiple: false,
-      valeurMin: 0,
-      valeurMax: 10,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'PY-003',
-      categorie: 'CAT-PY',
-      ordre: 30,
-      nomTechnique: 'sentiment_journee',
-      libelle: 'Ma journée s’est passée',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-JOURNEE-PY',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Tendance quotidienne et hebdomadaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'SUI-001',
-      categorie: 'CAT-SUI',
-      ordre: 10,
-      nomTechnique: 'besoin_identifie',
-      libelle: 'J’ai besoin de quelque chose',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Déclenchement d’une action',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'SUI-002',
-      categorie: 'CAT-SUI',
-      ordre: 20,
-      nomTechnique: 'description_besoin',
-      libelle: 'Préciser le besoin',
-      typeReponse: 'TEXTE_LONG',
-      obligatoire: false,
-      obligatoireSi: Object.freeze({
-        item: 'SUI-001',
-        valeur: 'OUI'
-      }),
-      multiple: false,
-      longueurMinConditionnelle: 5,
-      longueurMax: 500,
-      usage: 'Action ou réponse familiale',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'SUI-003',
-      categorie: 'CAT-SUI',
-      ordre: 30,
-      nomTechnique: 'probleme_identifie',
-      libelle: 'Un problème est à signaler',
-      typeReponse: 'CHOIX',
-      jeuValeurs: 'VAL-OUI-NON',
-      obligatoire: true,
-      multiple: false,
-      usage: 'Déclenchement d’une attention ou action',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'SUI-004',
-      categorie: 'CAT-SUI',
-      ordre: 40,
-      nomTechnique: 'description_probleme',
-      libelle: 'Préciser le problème',
-      typeReponse: 'TEXTE_LONG',
-      obligatoire: false,
-      obligatoireSi: Object.freeze({
-        item: 'SUI-003',
-        valeur: 'OUI'
-      }),
-      multiple: false,
-      longueurMinConditionnelle: 5,
-      longueurMax: 500,
-      usage: 'Action ou réponse familiale',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-    {
-      id: 'SUI-005',
-      categorie: 'CAT-SUI',
-      ordre: 50,
-      nomTechnique: 'remarque_libre',
-      libelle: 'Une remarque pour Florence et David',
-      typeReponse: 'TEXTE_LONG',
-      obligatoire: false,
-      multiple: false,
-      longueurMax: 500,
-      usage: 'Information complémentaire',
-      destinataire: 'Florence et David',
-      actif: true
-    },
-
-    {
-      id: 'CLO-001',
-      categorie: 'CAT-CLO',
-      ordre: 10,
-      nomTechnique: 'journee_complete',
-      libelle: 'J’ai terminé le compte rendu de la journée',
-      typeReponse: 'CASE_A_COCHER',
-      obligatoire: true,
-      multiple: false,
-      valeurAttendue: true,
-      usage: 'Autorise l’envoi',
-      destinataire: 'Système',
-      actif: true
-    }
-  ]),
-
-  notifications: Object.freeze([
-    {
-      id: 'NOT-001',
-      nomTechnique: 'confirmation_journee',
-      declencheur: 'Après création ou modification réussie',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: true
-    },
-    {
-      id: 'NOT-002',
-      nomTechnique: 'alerte_besoin',
-      declencheur: 'SUI-001 = OUI',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: true
-    },
-    {
-      id: 'NOT-003',
-      nomTechnique: 'alerte_probleme',
-      declencheur: 'SUI-003 = OUI',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: true
-    },
-    {
-      id: 'NOT-004',
-      nomTechnique: 'alerte_tendance_therese',
-      declencheur: 'Au moins une valeur THE = MOINS_BIEN',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: true
-    },
-    {
-      id: 'NOT-005',
-      nomTechnique: 'alerte_pierre_yves',
-      declencheur: 'PY-003 = DIFFICILE ou énergie / moral <= 2',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: true
-    },
-    {
-      id: 'NOT-006',
-      nomTechnique: 'synthese_hebdomadaire',
-      declencheur: 'Déclenchement planifié hebdomadaire',
-      destinataires: 'Florence et David',
-      canal: 'EMAIL',
-      bloqueEnregistrement: false,
-      actifMvp: false
-    }
-  ]),
-
-  syntheses: Object.freeze([
-    {
-      id: 'SYN-001',
-      nomTechnique: 'synthese_journaliere',
-      periode: 'JOUR',
-      destinataires: 'Florence et David',
-      sections: Object.freeze([
-        'Activités réalisées',
-        'Tendances concernant Thérèse',
-        'Tendances concernant Pierre-Yves',
-        'Besoins',
-        'Problèmes',
-        'Remarques'
-      ]),
-      actifMvp: true
-    },
-    {
-      id: 'SYN-002',
-      nomTechnique: 'synthese_hebdomadaire',
-      periode: 'SEMAINE',
-      destinataires: 'Florence et David',
-      sections: Object.freeze([
-        'Fréquence des activités',
-        'Tendances concernant Thérèse',
-        'Tendances concernant Pierre-Yves',
-        'Besoins',
-        'Problèmes',
-        'Points d’attention'
-      ]),
-      actifMvp: true
-    }
-  ])
-});
-
-
-/**
- * Retourne les catégories actives triées par ordre.
- */
-function getCategoriesActives() {
-  return REFERENTIEL.categories
-    .filter(function(categorie) {
-      return categorie.actif === true;
-    })
-    .slice()
-    .sort(function(a, b) {
-      return a.ordre - b.ordre;
-    });
+function initialiserApplication() {
+  afficherVersionEtDate();
+  initialiserChoixMultiples();
+  initialiserChoixUniques();
+  initialiserEnergie();
+  initialiserMoral();
+  initialiserEnvoi();
 }
 
+function afficherVersionEtDate() {
+  const version = document.getElementById("versionApp");
+  const dateJournee = document.getElementById("dateJournee");
 
-/**
- * Retourne les items actifs triés par catégorie puis par ordre.
- */
-function getItemsActifs() {
-  return REFERENTIEL.items
-    .filter(function(item) {
-      return item.actif === true;
-    })
-    .slice()
-    .sort(function(a, b) {
-      if (a.categorie === b.categorie) {
-        return a.ordre - b.ordre;
-      }
-      return a.categorie.localeCompare(b.categorie);
-    });
-}
-
-
-/**
- * Retourne un item à partir de son identifiant.
- */
-function getItemParId(idItem) {
-  return REFERENTIEL.items.find(function(item) {
-    return item.id === idItem;
-  }) || null;
-}
-
-
-/**
- * Retourne une catégorie à partir de son identifiant.
- */
-function getCategorieParId(idCategorie) {
-  return REFERENTIEL.categories.find(function(categorie) {
-    return categorie.id === idCategorie;
-  }) || null;
-}
-
-
-/**
- * Retourne les valeurs autorisées d'un jeu de valeurs.
- */
-function getValeursAutorisees(idJeuValeurs) {
-  if (!idJeuValeurs || !REFERENTIEL.jeuxValeurs[idJeuValeurs]) {
-    return [];
+  if (version && typeof CONFIG !== "undefined" && CONFIG.VERSION) {
+    version.textContent = CONFIG.VERSION;
   }
 
-  return REFERENTIEL.jeuxValeurs[idJeuValeurs]
-    .slice()
-    .sort(function(a, b) {
-      return a.ordre - b.ordre;
-    });
+  if (dateJournee) {
+    dateJournee.textContent = new Intl.DateTimeFormat("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(new Date());
+  }
 }
 
+function initialiserChoixMultiples() {
+  document.querySelectorAll(".choix.multiple").forEach(function (bouton) {
+    bouton.setAttribute("aria-pressed", "false");
 
-/**
- * Vérifie la cohérence minimale du référentiel.
- *
- * Cette fonction sera utilisée lors de l'installation TEST.
- */
-function verifierReferentiel() {
-  const erreurs = [];
-  const categoriesConnues = {};
-  const itemsConnus = {};
+    bouton.addEventListener("click", function () {
+      const valeur = bouton.dataset.valeur;
 
-  REFERENTIEL.categories.forEach(function(categorie) {
-    if (categoriesConnues[categorie.id]) {
-      erreurs.push('Catégorie dupliquée : ' + categorie.id);
-    }
-    categoriesConnues[categorie.id] = true;
+      if (valeur === "aucune") {
+        const selectionner =
+          !bouton.classList.contains("selectionne");
+
+        document
+          .querySelectorAll('.choix.multiple[data-groupe="activites"]')
+          .forEach(function (autreBouton) {
+            autreBouton.classList.remove("selectionne");
+            autreBouton.setAttribute("aria-pressed", "false");
+          });
+
+        if (selectionner) {
+          bouton.classList.add("selectionne");
+          bouton.setAttribute("aria-pressed", "true");
+        }
+
+        return;
+      }
+
+      const boutonAucune = document.querySelector(
+        '.choix.multiple[data-valeur="aucune"]'
+      );
+
+      if (boutonAucune) {
+        boutonAucune.classList.remove("selectionne");
+        boutonAucune.setAttribute("aria-pressed", "false");
+      }
+
+      bouton.classList.toggle("selectionne");
+
+      bouton.setAttribute(
+        "aria-pressed",
+        bouton.classList.contains("selectionne")
+          ? "true"
+          : "false"
+      );
+    });
   });
+}
 
-  REFERENTIEL.items.forEach(function(item) {
-    if (itemsConnus[item.id]) {
-      erreurs.push('Item dupliqué : ' + item.id);
-    }
-    itemsConnus[item.id] = true;
+function initialiserChoixUniques() {
+  document.querySelectorAll(".choix.unique").forEach(function (bouton) {
+    bouton.setAttribute("aria-pressed", "false");
 
-    if (!categoriesConnues[item.categorie]) {
-      erreurs.push(
-        'Catégorie inconnue pour l’item ' +
-        item.id +
-        ' : ' +
-        item.categorie
-      );
-    }
+    bouton.addEventListener("click", function () {
+      const groupe = bouton.dataset.groupe;
 
-    if (
-      item.jeuValeurs &&
-      !REFERENTIEL.jeuxValeurs[item.jeuValeurs]
-    ) {
-      erreurs.push(
-        'Jeu de valeurs inconnu pour l’item ' +
-        item.id +
-        ' : ' +
-        item.jeuValeurs
-      );
-    }
+      document
+        .querySelectorAll(
+          '.choix.unique[data-groupe="' + groupe + '"]'
+        )
+        .forEach(function (autreBouton) {
+          autreBouton.classList.remove("selectionne");
+          autreBouton.setAttribute("aria-pressed", "false");
+        });
 
-    if (
-      item.obligatoireSi &&
-      !REFERENTIEL.items.some(function(itemCible) {
-        return itemCible.id === item.obligatoireSi.item;
-      })
-    ) {
-      erreurs.push(
-        'Condition obligatoire invalide pour l’item ' +
-        item.id
-      );
-    }
+      bouton.classList.add("selectionne");
+      bouton.setAttribute("aria-pressed", "true");
+    });
   });
+}
+
+function initialiserEnergie() {
+  const bargraph = document.getElementById("energiePY");
+  const affichage = document.getElementById("valeurEnergie");
+
+  if (!bargraph || !affichage) {
+    return;
+  }
+
+  bargraph.querySelectorAll("button").forEach(function (bouton) {
+    bouton.setAttribute(
+      "aria-pressed",
+      bouton.classList.contains("active") ? "true" : "false"
+    );
+
+    bouton.addEventListener("click", function () {
+      const valeur = bouton.dataset.value;
+
+      bargraph.dataset.value = valeur;
+      affichage.textContent = valeur;
+
+      bargraph.querySelectorAll("button").forEach(function (autreBouton) {
+        autreBouton.classList.remove("active");
+        autreBouton.setAttribute("aria-pressed", "false");
+      });
+
+      bouton.classList.add("active");
+      bouton.setAttribute("aria-pressed", "true");
+    });
+  });
+}
+
+function initialiserMoral() {
+  const curseur = document.getElementById("moralPY");
+  const affichage = document.getElementById("valeurMoral");
+
+  if (!curseur || !affichage) {
+    return;
+  }
+
+  affichage.textContent = curseur.value;
+
+  curseur.addEventListener("input", function () {
+    affichage.textContent = curseur.value;
+  });
+}
+
+function initialiserEnvoi() {
+  const formulaire = document.getElementById("formulaireJournee");
+
+  if (formulaire) {
+    formulaire.addEventListener("submit", envoyerJournee);
+  }
+}
+
+async function envoyerJournee(evenement) {
+  evenement.preventDefault();
+
+  const bouton = document.getElementById("boutonValider");
+  const message = document.getElementById("messageEtat");
+
+  try {
+    verifierConfiguration();
+
+    const payload = construirePayload();
+
+    afficherEtat(
+      bouton,
+      message,
+      true,
+      "Envoi en cours…",
+      "information"
+    );
+
+    const reponse = await fetch(CONFIG.API_URL, {
+      method: "POST",
+      redirect: "follow",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const texte = await reponse.text();
+
+    let resultat;
+
+    try {
+      resultat = JSON.parse(texte);
+    } catch (erreur) {
+      throw new Error(
+        "La réponse du serveur n’est pas exploitable."
+      );
+    }
+
+    if (!reponse.ok || !resultat || resultat.ok !== true) {
+      throw new Error(
+        resultat && (resultat.message || resultat.code)
+          ? resultat.message || resultat.code
+          : "Erreur HTTP " + reponse.status
+      );
+    }
+
+    const identifiant =
+      resultat.idSession ||
+      (
+        resultat.creation &&
+        resultat.creation.idSession
+      ) ||
+      "";
+
+    afficherEtat(
+      bouton,
+      message,
+      false,
+      identifiant
+        ? "Journée enregistrée. Référence : " + identifiant
+        : "Journée enregistrée avec succès.",
+      "succes"
+    );
+  } catch (erreur) {
+    console.error("Échec de l’envoi :", erreur);
+
+    afficherEtat(
+      bouton,
+      message,
+      false,
+      "Envoi impossible : " + erreur.message,
+      "erreur"
+    );
+  }
+}
+
+function construirePayload() {
+  const activites = valeursSelectionnees("activites");
+
+  const moralTherese = valeurUnique("moralTherese");
+  const santeTherese = valeurUnique("santeTherese");
+  const mobiliteTherese = valeurUnique("mobiliteTherese");
+  const journeePY = valeurUnique("journeePY");
+
+  if (!moralTherese) {
+    throw new Error("Sélectionne le moral de Thérèse.");
+  }
+
+  if (!santeTherese) {
+    throw new Error(
+      "Sélectionne l’état de santé de Thérèse."
+    );
+  }
+
+  if (!mobiliteTherese) {
+    throw new Error(
+      "Sélectionne la mobilité de Thérèse."
+    );
+  }
+
+  if (!journeePY) {
+    throw new Error(
+      "Indique comment s’est passée ta journée."
+    );
+  }
+
+  const reponses = {
+    "REP-004": activites.includes("courses")
+      ? "OUI"
+      : "NON",
+
+    "REP-005": activites.includes("courses_rangees")
+      ? "OUI"
+      : "NON",
+
+    "REP-006": determinerTypeRepas(activites),
+
+    "MEN-001": menageRealise(activites)
+      ? "OUI"
+      : "NON",
+
+    "EXT-001": activites.includes("entretien_exterieur")
+      ? "OUI"
+      : "NON",
+
+    "THE-001": convertirTendance(moralTherese),
+    "THE-002": convertirTendance(santeTherese),
+    "THE-003": convertirTendance(mobiliteTherese),
+
+    "PY-001": Number(
+      document.getElementById("energiePY").dataset.value
+    ),
+
+    "PY-002": Number(
+      document.getElementById("moralPY").value
+    ),
+
+    "PY-003": convertirJournee(journeePY),
+
+    "SUI-001": "NON",
+    "SUI-003": "NON",
+    "SUI-005": construireRemarque(activites),
+
+    "CLO-001": true
+  };
+
+  const zonesMenage = construireZonesMenage(activites);
+
+  if (zonesMenage.length > 0) {
+    reponses["MEN-002"] = zonesMenage;
+  }
+
+  if (activites.includes("entretien_exterieur")) {
+    reponses["EXT-002"] = ["PETIT_ENTRETIEN"];
+  }
 
   return {
-    ok: erreurs.length === 0,
-    erreurs: erreurs,
-    nombreCategories: REFERENTIEL.categories.length,
-    nombreItems: REFERENTIEL.items.length,
-    nombreNotifications: REFERENTIEL.notifications.length,
-    nombreSyntheses: REFERENTIEL.syntheses.length
+    action: "CREER_SESSION",
+    applicationId: "APP_CARNET_CARDOT",
+    dateSaisie: dateLocaleIso(),
+    auteur: "PIERRE_YVES",
+    idRequete: genererIdRequete(),
+
+    contexte: {
+      origine: "GITHUB_PAGES",
+      interface: "CARNET_CARDOT",
+      environnement: CONFIG.MODE_TEST ? "TEST" : "PROD"
+    },
+
+    reponses: reponses
   };
+}
+
+function determinerTypeRepas(activites) {
+  if (activites.includes("repas_mijote")) {
+    return "CUISINE";
+  }
+
+  if (activites.includes("repas_rechauffe")) {
+    return "RESTE";
+  }
+
+  if (activites.includes("repas_achete")) {
+    return "BARQUETTE";
+  }
+
+  return "AUCUN";
+}
+
+function menageRealise(activites) {
+  return activites.some(function (activite) {
+    return (
+      activite.startsWith("menage_") ||
+      activite.startsWith("linge_")
+    );
+  });
+}
+
+function construireZonesMenage(activites) {
+  const correspondances = {
+    menage_cuisine: "CUISINE",
+    menage_salle_de_bain: "SALLE_DE_BAIN",
+    menage_wc: "WC",
+    menage_salon: "SALON",
+    menage_couloir: "COULOIR",
+    menage_chambre: "CHAMBRE"
+  };
+
+  const zones = [];
+
+  activites.forEach(function (activite) {
+    const zone = correspondances[activite];
+
+    if (zone && !zones.includes(zone)) {
+      zones.push(zone);
+    }
+  });
+
+  return zones;
+}
+
+function construireRemarque(activites) {
+  const remarque = document
+    .getElementById("remarque")
+    .value
+    .trim();
+
+  const complements = [];
+
+  if (
+    activites.includes(
+      "demarches_administratives_medicales"
+    )
+  ) {
+    complements.push(
+      "Démarches administratives ou médicales"
+    );
+  }
+
+  if (activites.includes("gestion_courrier")) {
+    complements.push("Gestion du courrier");
+  }
+
+  if (activites.includes("autre")) {
+    complements.push("Autre activité");
+  }
+
+  return [remarque].concat(complements)
+    .filter(Boolean)
+    .join(" — ");
+}
+
+function valeursSelectionnees(groupe) {
+  return Array.from(
+    document.querySelectorAll(
+      '.choix.selectionne[data-groupe="' +
+      groupe +
+      '"]'
+    )
+  ).map(function (bouton) {
+    return bouton.dataset.valeur;
+  });
+}
+
+function valeurUnique(groupe) {
+  const bouton = document.querySelector(
+    '.choix.selectionne[data-groupe="' +
+    groupe +
+    '"]'
+  );
+
+  return bouton ? bouton.dataset.valeur : "";
+}
+
+function convertirTendance(valeur) {
+  const correspondances = {
+    moins_bien: "MOINS_BIEN",
+    comme_habitude: "HABITUEL",
+    mieux: "MIEUX"
+  };
+
+  return correspondances[valeur] || "";
+}
+
+function convertirJournee(valeur) {
+  const correspondances = {
+    difficile: "DIFFICILE",
+    normalement: "MOYEN",
+    bien: "BIEN"
+  };
+
+  return correspondances[valeur] || "";
+}
+
+function verifierConfiguration() {
+  if (typeof CONFIG === "undefined") {
+    throw new Error(
+      "Le fichier config.js n’est pas chargé."
+    );
+  }
+
+  if (
+    !CONFIG.API_URL ||
+    !CONFIG.API_URL.startsWith("https://")
+  ) {
+    throw new Error(
+      "L’adresse de l’API est absente ou incorrecte."
+    );
+  }
+}
+
+function afficherEtat(
+  bouton,
+  message,
+  enCours,
+  texte,
+  type
+) {
+  if (bouton) {
+    bouton.disabled = enCours;
+
+    bouton.textContent = enCours
+      ? "Envoi en cours…"
+      : "Valider la journée";
+  }
+
+  if (message) {
+    message.textContent = texte;
+    message.dataset.type = type;
+  }
+}
+
+function dateLocaleIso() {
+  const date = new Date();
+
+  const annee = date.getFullYear();
+
+  const mois = String(
+    date.getMonth() + 1
+  ).padStart(2, "0");
+
+  const jour = String(
+    date.getDate()
+  ).padStart(2, "0");
+
+  return annee + "-" + mois + "-" + jour;
+}
+
+function genererIdRequete() {
+  const horodatage = new Date()
+    .toISOString()
+    .replace(/\D/g, "")
+    .slice(0, 14);
+
+  const aleatoire = Math.random()
+    .toString(16)
+    .slice(2, 10)
+    .toUpperCase()
+    .padEnd(8, "0");
+
+  return (
+    "REQ-CARNET-" +
+    horodatage +
+    "-" +
+    aleatoire
+  );
 }
