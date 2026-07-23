@@ -9,66 +9,6 @@
 </head>
 <body>
   <main class="app">
-    <section class="carte">
-  <h2>Début de journée</h2>
-
-  <fieldset>
-    <legend>Heure de démarrage</legend>
-
-    <div class="grille-choix trois">
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_0900">
-        9 h 00
-      </button>
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_0930">
-        9 h 30
-      </button>
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_1000">
-        10 h 00
-      </button>
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_1030">
-        10 h 30
-      </button>
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_1100">
-        11 h 00
-      </button>
-
-      <button
-        type="button"
-        class="choix unique"
-        data-groupe="DEM_DEMARRAGE"
-        data-valeur="DEM_APRES_1100">
-        Après 11 h
-      </button>
-
-    </div>
-  </fieldset>
-
-</section>
     <header class="entete">
       <p class="version" id="versionApp">V1.0 TEST — build 0007</p>
       <h1>Carnet de liaison</h1>
@@ -77,6 +17,64 @@
     </header>
 
     <form id="formulaireJournee" novalidate>
+      <section class="carte">
+        <h2>Début de journée</h2>
+
+        <fieldset>
+          <legend>Heure de démarrage</legend>
+
+          <div class="grille-choix trois">
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_0900">
+              9 h 00
+            </button>
+
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_0930">
+              9 h 30
+            </button>
+
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_1000">
+              10 h 00
+            </button>
+
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_1030">
+              10 h 30
+            </button>
+
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_1100">
+              11 h 00
+            </button>
+
+            <button
+              type="button"
+              class="choix unique"
+              data-groupe="DEM_DEMARRAGE"
+              data-valeur="DEM_APRES_1100">
+              Après 11 h
+            </button>
+          </div>
+        </fieldset>
+      </section>
+
       <section class="carte">
         <h2>Situation de Thérèse</h2>
 
@@ -132,18 +130,18 @@
         <fieldset>
           <legend>Déjeuner</legend>
           <div class="grille-choix trois">
-            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_MIJOTE">Plat mijoté</button>
-            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="RESTE_RECHAUFFE">Plat réchauffé</button>
-            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_ACHETE">Barquette</button>
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_MIJOTE">Plat élaboré par moi-même</button>
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="RESTE_RECHAUFFE">Restes réchauffés</button>
+            <button type="button" class="choix unique" data-groupe="REP_DEJEUNER" data-valeur="PLAT_ACHETE">Barquette cuisinée</button>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Dîner</legend>
           <div class="grille-choix trois">
-            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_MIJOTE">Plat mijoté</button>
-            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="RESTE_RECHAUFFE">Plat réchauffé</button>
-            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_ACHETE">Barquette</button>
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_MIJOTE">Plat élaboré par moi-même</button>
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="RESTE_RECHAUFFE">Restes réchauffés</button>
+            <button type="button" class="choix unique" data-groupe="REP_DINER" data-valeur="PLAT_ACHETE">Barquette cuisinée</button>
           </div>
         </fieldset>
 
@@ -153,6 +151,7 @@
             <button type="button" class="choix unique" data-groupe="REP_COURSES" data-valeur="NON">Aucune course</button>
             <button type="button" class="choix unique" data-groupe="REP_COURSES" data-valeur="OUI">Courses effectuées</button>
           </div>
+
           <div id="zoneMontantCourses" class="zone-conditionnelle" hidden>
             <label for="montantCourses">Montant des courses</label>
             <div class="champ-montant">
@@ -168,7 +167,12 @@
         <p class="aide">Sélectionne chaque action réellement effectuée dans chaque pièce.</p>
 
         <div class="table-menage" role="group" aria-label="Ménage par pièce et par action">
-          <div class="ligne-entete"><span>Pièce</span><span>Aspirateur</span><span>Poussière</span><span>Lavage</span></div>
+          <div class="ligne-entete">
+            <span>Pièce</span>
+            <span>Aspirateur</span>
+            <span>Poussière</span>
+            <span>Lavage</span>
+          </div>
 
           <div class="ligne-menage">
             <strong>Cuisine</strong>
@@ -243,12 +247,18 @@
         <h2>Mon regard sur ma journée</h2>
 
         <div class="champ-range">
-          <label for="energiePY"><span>Mon énergie aujourd’hui</span><strong><span id="valeurEnergie">5</span> / 10</strong></label>
+          <label for="energiePY">
+            <span>Mon énergie aujourd’hui</span>
+            <strong><span id="valeurEnergie">5</span> / 10</strong>
+          </label>
           <input id="energiePY" type="range" min="0" max="10" step="1" value="5">
         </div>
 
         <div class="champ-range">
-          <label for="moralPY"><span>Mon moral aujourd’hui</span><strong><span id="valeurMoral">5</span> / 10</strong></label>
+          <label for="moralPY">
+            <span>Mon moral aujourd’hui</span>
+            <strong><span id="valeurMoral">5</span> / 10</strong>
+          </label>
           <input id="moralPY" type="range" min="0" max="10" step="1" value="5">
         </div>
 
@@ -281,22 +291,34 @@
           </div>
         </fieldset>
 
-        <label class="label-texte" for="remarque">Information importante pour le débriefing hebdomadaire</label>
-        <textarea id="remarque" rows="4" maxlength="500" placeholder="Facultatif"></textarea>
+        <label class="label-texte" for="remarque">
+          Information importante pour le débriefing hebdomadaire
+        </label>
+
+        <textarea
+          id="remarque"
+          rows="4"
+          maxlength="500"
+          placeholder="Facultatif"></textarea>
       </section>
 
-   
-    <div class="zone-validation">
-  <button
-      type="submit"
-      id="boutonValider"
-      class="bouton-principal">
-      Valider la journée
-  </button>
+      <div class="zone-validation">
+        <button
+          type="submit"
+          id="boutonValider"
+          class="bouton-principal">
+          Valider la journée
+        </button>
 
-  <p
-      id="messageEtat"
-      class="message-etat"
-      aria-live="polite">
-  </p>
-</div>
+        <p
+          id="messageEtat"
+          class="message-etat"
+          aria-live="polite"></p>
+      </div>
+    </form>
+  </main>
+
+  <script src="config.js?v=0010"></script>
+  <script src="app.js?v=0014"></script>
+</body>
+</html>
