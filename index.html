@@ -9,6 +9,66 @@
 </head>
 <body>
   <main class="app">
+    <section class="carte">
+  <h2>Début de journée</h2>
+
+  <fieldset>
+    <legend>Heure de démarrage</legend>
+
+    <div class="grille-choix trois">
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_0900">
+        9 h 00
+      </button>
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_0930">
+        9 h 30
+      </button>
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_1000">
+        10 h 00
+      </button>
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_1030">
+        10 h 30
+      </button>
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_1100">
+        11 h 00
+      </button>
+
+      <button
+        type="button"
+        class="choix unique"
+        data-groupe="DEM_DEMARRAGE"
+        data-valeur="DEM_APRES_1100">
+        Après 11 h
+      </button>
+
+    </div>
+  </fieldset>
+
+</section>
     <header class="entete">
       <p class="version" id="versionApp">V1.0 TEST — build 0007</p>
       <h1>Carnet de liaison</h1>
@@ -225,21 +285,18 @@
         <textarea id="remarque" rows="4" maxlength="500" placeholder="Facultatif"></textarea>
       </section>
 
-      <section class="carte cloture">
-        <label class="confirmation">
-          <input id="clotureValidee" type="checkbox">
-          <span>Je confirme que la journée est terminée.</span>
-        </label>
-      </section>
+   
+    <div class="zone-validation">
+  <button
+      type="submit"
+      id="boutonValider"
+      class="bouton-principal">
+      Valider la journée
+  </button>
 
-      <div class="zone-validation">
-        <button type="submit" id="boutonValider" class="bouton-principal">Valider la journée</button>
-        <p id="messageEtat" class="message-etat" aria-live="polite"></p>
-      </div>
-    </form>
-  </main>
-
-  <script src="config.js?v=0010"></script>
-  <script src="app.js?v=0014"></script>
-</body>
-</html>
+  <p
+      id="messageEtat"
+      class="message-etat"
+      aria-live="polite">
+  </p>
+</div>
