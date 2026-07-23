@@ -312,6 +312,7 @@ async function soumettre(evenement) {
   }
 }
 
+
 function construirePayload() {
   const remarque = construireRemarqueComplete();
 
@@ -377,6 +378,7 @@ function construirePayload() {
     }
   };
 }
+
 function construireRemarqueComplete() {
   const lignes = [];
 
@@ -440,7 +442,6 @@ const obligatoires = [
     "DEM_DEMARRAGE",
     "Sélectionne l'heure de début de journée."
   ],
-
 [
       "THE_MORAL",
       "Sélectionne le moral de Thérèse."
