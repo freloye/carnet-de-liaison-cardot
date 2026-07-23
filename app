@@ -315,14 +315,14 @@ async function soumettre(evenement) {
 function construirePayload() {
   const remarque = construireRemarqueComplete();
 
+ DEM_DEMARRAGE: valeurUnique("DEM_DEMARRAGE"),
+  
   const elementEnergie =
     document.getElementById("energiePY");
 
   const elementMoral =
     document.getElementById("moralPY");
 
-  const elementCloture =
-    document.getElementById("clotureValidee");
 
   const reponses = {
     THE_MORAL: valeurUnique("THE_MORAL"),
@@ -352,9 +352,7 @@ function construirePayload() {
     SUI_BESOIN: valeurUnique("SUI_BESOIN"),
     SUI_REMARQUE: remarque,
 
-    CLO_VALIDEE: Boolean(
-      elementCloture &&
-      elementCloture.checked
+  
     )
   };
    if (reponses.REP_COURSES === "OUI") {
@@ -442,7 +440,12 @@ function validerPayload(payload) {
   }
 
   const obligatoires = [
-    [
+ [
+  "DEM_DEMARRAGE",
+  "Sélectionne l'heure de début de journée."
+],  
+
+[
       "THE_MORAL",
       "Sélectionne le moral de Thérèse."
     ],
