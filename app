@@ -2,7 +2,7 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0011
+ Build : 0012
 *****************************************************************/
 
 "use strict";
@@ -315,16 +315,15 @@ async function soumettre(evenement) {
 function construirePayload() {
   const remarque = construireRemarqueComplete();
 
- DEM_DEMARRAGE: valeurUnique("DEM_DEMARRAGE"),
-  
   const elementEnergie =
     document.getElementById("energiePY");
 
   const elementMoral =
     document.getElementById("moralPY");
 
-
   const reponses = {
+    DEM_DEMARRAGE: valeurUnique("DEM_DEMARRAGE"),
+
     THE_MORAL: valeurUnique("THE_MORAL"),
     THE_SANTE: valeurUnique("THE_SANTE"),
     THE_MOBILITE: valeurUnique("THE_MOBILITE"),
@@ -350,12 +349,10 @@ function construirePayload() {
 
     SUI_PROBLEME: valeurUnique("SUI_PROBLEME"),
     SUI_BESOIN: valeurUnique("SUI_BESOIN"),
-    SUI_REMARQUE: remarque,
-
-  
-    )
+    SUI_REMARQUE: remarque
   };
-   if (reponses.REP_COURSES === "OUI") {
+
+  if (reponses.REP_COURSES === "OUI") {
     const elementMontant =
       document.getElementById("montantCourses");
 
@@ -380,7 +377,6 @@ function construirePayload() {
     }
   };
 }
-
 function construireRemarqueComplete() {
   const lignes = [];
 
@@ -439,11 +435,11 @@ function validerPayload(payload) {
     );
   }
 
-  const obligatoires = [
- [
-  "DEM_DEMARRAGE",
-  "Sélectionne l'heure de début de journée."
-],  
+const obligatoires = [
+  [
+    "DEM_DEMARRAGE",
+    "Sélectionne l'heure de début de journée."
+  ],
 
 [
       "THE_MORAL",
@@ -526,12 +522,6 @@ function validerPayload(payload) {
         "Indique le montant des courses."
       );
     }
-  }
-
-  if (reponses.CLO_VALIDEE !== true) {
-    throw new Error(
-      "Confirme que la journée est terminée."
-    );
   }
 }
 
