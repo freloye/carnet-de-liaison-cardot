@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Carnet Cardot">
-  <link rel="manifest" href="manifest.webmanifest?v=0019">
+  <link rel="manifest" href="manifest.webmanifest?v=0020">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>Carnet de liaison Cardot</title>
-  <link rel="stylesheet" href="styles.css?v=0019">
+  <link rel="stylesheet" href="styles.css?v=0020">
 </head>
 <body>
   <main class="app">
@@ -54,42 +54,48 @@
         <div id="joursSemaine" class="jours-semaine" aria-label="Jours renseignés dans la semaine"></div>
       </section>
 
-      <section class="carte-synthese theme-repas">
-        <div class="titre-synthese">
-          <span class="icone-rubrique" aria-hidden="true">🍽️</span>
-          <div>
-            <h3>Repas</h3>
-            <p>Comment se sont organisés les repas cette semaine ?</p>
-          </div>
+      <section class="carte-synthese theme-demarrage">
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🕘</span><div><h3>Début de journée</h3><p>Heures de démarrage renseignées dans la semaine.</p></div></div>
+        <div class="repartition-texte" id="repartitionDemarrage">Aucune heure renseignée.</div>
+        <p class="resume-tendance" id="tendanceDemarrage">—</p>
+      </section>
+
+      <section class="carte-synthese theme-therese">
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">👵</span><div><h3>Situation de Thérèse</h3><p>Répartition des observations, sans interprétation automatique.</p></div></div>
+        <div class="observations-grille">
+          <div><strong>Moral</strong><span id="thereseMoral">—</span></div>
+          <div><strong>Santé</strong><span id="thereseSante">—</span></div>
+          <div><strong>Mobilité</strong><span id="thereseMobilite">—</span></div>
+          <div><strong>Appétit</strong><span id="thereseAppetit">—</span></div>
+          <div><strong>Sommeil</strong><span id="thereseSommeil">—</span></div>
         </div>
+        <p class="resume-tendance" id="tendanceTherese">—</p>
+      </section>
+
+      <section class="carte-synthese theme-repas">
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🍽️</span><div><h3>Repas et courses</h3><p>Organisation des repas et courses de la semaine.</p></div></div>
         <div class="grille-indicateurs">
           <div class="indicateur"><strong id="totalPlatsElabores">0</strong><span>Plats élaborés</span></div>
           <div class="indicateur"><strong id="totalRestes">0</strong><span>Restes réchauffés</span></div>
           <div class="indicateur vigilance"><strong id="totalBarquettes">0</strong><span>Barquettes cuisinées</span></div>
         </div>
+        <div class="grille-indicateurs deux">
+          <div class="indicateur"><strong id="joursCourses">0</strong><span>Jours avec courses</span></div>
+          <div class="indicateur"><strong id="montantCoursesSemaine">—</strong><span>Montant renseigné</span></div>
+        </div>
+        <p class="resume-tendance" id="tendanceCourses">—</p>
         <button type="button" class="bouton-detail" data-detail="repas">Voir les jours concernés</button>
       </section>
 
       <section class="carte-synthese theme-menage">
-        <div class="titre-synthese">
-          <span class="icone-rubrique" aria-hidden="true">🧹</span>
-          <div>
-            <h3>Ménage</h3>
-            <p>Comment l’entretien du logement s’est-il réparti ?</p>
-          </div>
-        </div>
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🧹</span><div><h3>Ménage</h3><p>Répartition de l’entretien du logement.</p></div></div>
         <p class="indicateur-principal"><strong id="totalActionsMenage">0</strong> actions réalisées</p>
-        <div class="liste-simple">
-          <span>Cuisine : <strong id="menageCuisine">0</strong></span>
-          <span>Salon / séjour : <strong id="menageSalon">0</strong></span>
-          <span>Chambre : <strong id="menageChambre">0</strong></span>
-          <span>Autres espaces : <strong id="menageAutres">0</strong></span>
-        </div>
+        <div class="liste-simple"><span>Cuisine : <strong id="menageCuisine">0</strong></span><span>Salon / séjour : <strong id="menageSalon">0</strong></span><span>Chambre : <strong id="menageChambre">0</strong></span><span>Autres espaces : <strong id="menageAutres">0</strong></span></div>
         <button type="button" class="bouton-detail" data-detail="menage">Voir les jours concernés</button>
       </section>
 
       <section class="carte-synthese theme-linge">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🧺</span><div><h3>Linge</h3><p>Activités réalisées et répartition dans la semaine.</p></div></div>
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">👕</span><div><h3>Linge</h3><p>Activités réalisées et répartition dans la semaine.</p></div></div>
         <p class="indicateur-principal"><strong id="totalActionsLinge">0</strong> actions réalisées</p>
         <div class="liste-simple"><span>Lessive : <strong id="lingeLessive">0</strong></span><span>Étendage / rentrée : <strong id="lingeEtendage">0</strong></span><span>Pliage / repassage : <strong id="lingeRepassage">0</strong></span><span>Rangement : <strong id="lingeRangement">0</strong></span></div>
         <p class="resume-tendance" id="tendanceLinge">—</p>
@@ -102,40 +108,28 @@
         <p class="resume-tendance" id="tendanceExterieur">—</p>
       </section>
 
-      <section class="carte-synthese theme-courses">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🛒</span><div><h3>Courses</h3><p>Fréquence et répartition sur la semaine.</p></div></div>
-        <div class="grille-indicateurs deux"><div class="indicateur"><strong id="joursCourses">0</strong><span>Jours avec courses</span></div><div class="indicateur"><strong id="montantCoursesSemaine">—</strong><span>Montant renseigné</span></div></div>
-        <p class="resume-tendance" id="tendanceCourses">—</p>
-      </section>
-
       <section class="carte-synthese theme-autres">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🧰</span><div><h3>Autres activités</h3><p>Répartition des activités réalisées.</p></div></div>
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">📋</span><div><h3>Autres activités</h3><p>Même ordre que dans la saisie quotidienne.</p></div></div>
         <p class="indicateur-principal"><strong id="totalAutresActivites">0</strong> activités réalisées</p>
-        <div class="repartition-texte" id="repartitionAutres">Aucune activité renseignée.</div>
-      </section>
-
-      <section class="carte-synthese theme-demarches">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">📋</span><div><h3>Démarches et courrier</h3><p>Jours où ces activités ont été réalisées.</p></div></div>
-        <div class="grille-indicateurs deux"><div class="indicateur"><strong id="joursDemarches">0</strong><span>Démarches administratives ou médicales</span></div><div class="indicateur"><strong id="joursCourrier">0</strong><span>Gestion du courrier</span></div></div>
-        <p class="resume-tendance" id="tendanceDemarches">—</p>
-      </section>
-
-      <section class="carte-synthese theme-therese">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">👵</span><div><h3>Situation de Thérèse</h3><p>Répartition des observations, sans interprétation automatique.</p></div></div>
-        <div class="observations-grille">
-          <div><strong>Moral</strong><span id="thereseMoral">—</span></div><div><strong>Santé</strong><span id="thereseSante">—</span></div><div><strong>Mobilité</strong><span id="thereseMobilite">—</span></div><div><strong>Appétit</strong><span id="thereseAppetit">—</span></div><div><strong>Sommeil</strong><span id="thereseSommeil">—</span></div>
+        <div class="liste-simple">
+          <span>Bricolage : <strong id="autBricolage">0</strong></span>
+          <span>Démarches administratives et médicales : <strong id="joursDemarches">0</strong></span>
+          <span>Gestion du courrier : <strong id="joursCourrier">0</strong></span>
+          <span>Rendez-vous : <strong id="autRendezVous">0</strong></span>
+          <span>Accompagnement de Thérèse : <strong id="autAccompagnementTherese">0</strong></span>
+          <span>Entretien d’un équipement : <strong id="autEntretienEquipement">0</strong></span>
         </div>
-        <p class="resume-tendance" id="tendanceTherese">—</p>
+        <p class="resume-tendance" id="tendanceAutres">—</p>
       </section>
 
       <section class="carte-synthese theme-pierre-yves">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🙂</span><div><h3>Regard de Pierre-Yves</h3><p>Qualité de la journée, énergie et moral.</p></div></div>
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">🙂</span><div><h3>Mon regard sur ma journée</h3><p>Qualité de la journée, énergie et moral.</p></div></div>
         <div class="grille-indicateurs trois"><div class="indicateur"><strong id="moyenneEnergie">—</strong><span>Énergie moyenne</span></div><div class="indicateur"><strong id="moyenneMoral">—</strong><span>Moral moyen</span></div><div class="indicateur"><strong id="qualiteJournees">—</strong><span>Qualité des journées</span></div></div>
         <p class="resume-tendance" id="tendancePierreYves">—</p>
       </section>
 
       <section class="carte-synthese theme-suivi">
-        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">💬</span><div><h3>Problèmes, besoins et remarques</h3><p>Éléments signalés pour préparer le dialogue hebdomadaire.</p></div></div>
+        <div class="titre-synthese"><span class="icone-rubrique" aria-hidden="true">📝</span><div><h3>Suivi et pense-bête</h3><p>Problèmes, besoins et remarques signalés pour le dialogue hebdomadaire.</p></div></div>
         <div class="grille-indicateurs trois"><div class="indicateur"><strong id="joursProblemes">0</strong><span>Jours avec problème</span></div><div class="indicateur"><strong id="joursBesoins">0</strong><span>Jours avec besoin</span></div><div class="indicateur"><strong id="joursRemarques">0</strong><span>Jours avec remarque</span></div></div>
         <div class="liste-remarques" id="listeRemarques"><p>Aucune remarque cette semaine.</p></div>
       </section>
@@ -446,8 +440,7 @@
     </form>
   </main>
 
-  <script src="config.js?v=0019"></script>
-  <script src="app.js?v=0019"></script>
+  <script src="config.js?v=0020"></script>
+  <script src="app.js?v=0020"></script>
 </body>
 </html>
-
