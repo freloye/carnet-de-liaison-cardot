@@ -26,3 +26,8 @@ Cette première version contient :
 Déposer les fichiers à la racine du dépôt GitHub, puis activer GitHub Pages depuis :
 
 `Settings > Pages > Deploy from a branch > main / root`
+
+
+## Build 0017
+
+Premier prototype de la synthèse hebdomadaire : navigation entre la saisie et une vue de démonstration. Aucune lecture de Google Sheets dans ce lot.
