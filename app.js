@@ -2,7 +2,7 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0018
+ Build : 0019
 *****************************************************************/
 
 "use strict";
@@ -35,7 +35,7 @@ function initialiserApplicationInstallable() {
 
   window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register("./service-worker.js?v=0018")
+      .register("./service-worker.js?v=0019")
       .catch(function (erreur) {
         console.warn("Service worker non enregistré :", erreur);
       });
@@ -777,6 +777,8 @@ function actualiserSyntheseHebdomadaire() {
   affecterTexte("moyenneEnergie", moyennes.energie);
   affecterTexte("moyenneMoral", moyennes.moral);
 
+  actualiserSyntheseComplete(renseignees);
+
   const message = document.getElementById("messageDonneesSemaine");
   if (message) {
     message.textContent = renseignees.length
@@ -830,6 +832,130 @@ function calculerMoyennes(journees) {
       .toFixed(1).replace(".", ",");
   }
   return { energie: moyenne("PY_ENERGIE"), moral: moyenne("PY_MORAL") };
+}
+
+
+function actualiserSyntheseComplete(journees) {
+  const linge = compterActions(journees, "LIN_ACTIVITES", ["AUCUN"]);
+  affecterTexte("totalActionsLinge", linge.total);
+  affecterTexte("lingeLessive", linge.parValeur.LESSIVE || 0);
+  affecterTexte("lingeEtendage", (linge.parValeur.ETENDAGE || 0) + (linge.parValeur.RENTRE || 0));
+  affecterTexte("lingeRepassage", linge.parValeur.REPASSAGE || 0);
+  affecterTexte("lingeRangement", linge.parValeur.RANGEMENT || 0);
+  affecterTexte("tendanceLinge", phraseRegularite(linge.jours, journees.length));
+
+  const exterieur = compterActions(journees, "EXT_ACTIVITES", ["AUCUN"]);
+  affecterTexte("totalActionsExterieur", exterieur.total);
+  affecterTexte("repartitionExterieur", repartitionLibelle(exterieur.parValeur));
+  affecterTexte("tendanceExterieur", phraseRegularite(exterieur.jours, journees.length));
+
+  const joursCourses = journees.filter(function (j) { return j.reponses.REP_COURSES === "OUI"; });
+  affecterTexte("joursCourses", joursCourses.length);
+  const montants = joursCourses.map(function (j) { return Number(j.reponses.REP_MONTANT_COURSES); }).filter(Number.isFinite);
+  affecterTexte("montantCoursesSemaine", montants.length ? montants.reduce(function (a, b) { return a + b; }, 0).toFixed(2).replace(".", ",") + " €" : "—");
+  affecterTexte("tendanceCourses", phraseRegularite(joursCourses.length, journees.length));
+
+  const autres = compterActions(journees, "AUT_ACTIVITES", ["AUCUNE", "DEMARCHES", "COURRIER"]);
+  affecterTexte("totalAutresActivites", autres.total);
+  affecterTexte("repartitionAutres", repartitionLibelle(autres.parValeur));
+
+  const joursDemarches = compterJoursAvecValeur(journees, "AUT_ACTIVITES", "DEMARCHES");
+  const joursCourrier = compterJoursAvecValeur(journees, "AUT_ACTIVITES", "COURRIER");
+  affecterTexte("joursDemarches", joursDemarches);
+  affecterTexte("joursCourrier", joursCourrier);
+  affecterTexte("tendanceDemarches", "Répartition : " + joursDemarches + " jour(s) avec démarches, " + joursCourrier + " jour(s) avec courrier.");
+
+  affecterTexte("thereseMoral", distributionChamp(journees, "THE_MORAL"));
+  affecterTexte("thereseSante", distributionChamp(journees, "THE_SANTE"));
+  affecterTexte("thereseMobilite", distributionChamp(journees, "THE_MOBILITE"));
+  affecterTexte("thereseAppetit", distributionObservation(journees, "Appétit de Thérèse"));
+  affecterTexte("thereseSommeil", distributionObservation(journees, "Sommeil de Thérèse"));
+  affecterTexte("tendanceTherese", comparaisonPremierDernier(journees, ["THE_MORAL", "THE_SANTE", "THE_MOBILITE"], "Première et dernière journée renseignées"));
+
+  affecterTexte("qualiteJournees", distributionChamp(journees, "PY_JOURNEE"));
+  affecterTexte("tendancePierreYves", tendanceNumerique(journees));
+
+  const problemes = journees.filter(function (j) { return j.reponses.SUI_PROBLEME === "OUI"; }).length;
+  const besoins = journees.filter(function (j) { return j.reponses.SUI_BESOIN === "OUI"; }).length;
+  const remarques = journees.filter(function (j) { return remarquePersonnelle(j.reponses.SUI_REMARQUE); });
+  affecterTexte("joursProblemes", problemes);
+  affecterTexte("joursBesoins", besoins);
+  affecterTexte("joursRemarques", remarques.length);
+  const liste = document.getElementById("listeRemarques");
+  if (liste) liste.innerHTML = remarques.length ? remarques.map(function (j) {
+    return "<p><strong>" + jourCourt(j.dateSaisie) + " :</strong> " + echapperHtml(remarquePersonnelle(j.reponses.SUI_REMARQUE)) + "</p>";
+  }).join("") : "<p>Aucune remarque cette semaine.</p>";
+}
+
+function compterActions(journees, champ, exclus) {
+  const resultat = { total: 0, jours: 0, parValeur: {} };
+  journees.forEach(function (journee) {
+    const valeurs = Array.isArray(journee.reponses[champ]) ? journee.reponses[champ].filter(function (v) { return !exclus.includes(v); }) : [];
+    if (valeurs.length) resultat.jours += 1;
+    resultat.total += valeurs.length;
+    valeurs.forEach(function (v) { resultat.parValeur[v] = (resultat.parValeur[v] || 0) + 1; });
+  });
+  return resultat;
+}
+
+function compterJoursAvecValeur(journees, champ, valeur) {
+  return journees.filter(function (j) { return Array.isArray(j.reponses[champ]) && j.reponses[champ].includes(valeur); }).length;
+}
+
+function phraseRegularite(joursActifs, joursRenseignes) {
+  if (!joursRenseignes) return "Aucune comparaison possible cette semaine.";
+  return "Activité présente sur " + joursActifs + " des " + joursRenseignes + " journées renseignées.";
+}
+
+function repartitionLibelle(objet) {
+  const entrees = Object.keys(objet).sort(function (a, b) { return objet[b] - objet[a]; });
+  if (!entrees.length) return "Aucune activité renseignée.";
+  return entrees.map(function (cle) { return libelleValeur(cle) + " : " + objet[cle]; }).join(" · ");
+}
+
+function distributionChamp(journees, champ) {
+  const compte = {};
+  journees.forEach(function (j) { const v = j.reponses[champ]; if (v) compte[v] = (compte[v] || 0) + 1; });
+  return repartitionLibelle(compte).replace("Aucune activité renseignée.", "—");
+}
+
+function distributionObservation(journees, etiquette) {
+  const compte = {};
+  journees.forEach(function (j) {
+    const texte = String(j.reponses.SUI_REMARQUE || "");
+    const expression = new RegExp(etiquette + "\\s*:\\s*([^—]+)");
+    const resultat = texte.match(expression);
+    if (resultat) { const v = resultat[1].trim(); compte[v] = (compte[v] || 0) + 1; }
+  });
+  return repartitionLibelle(compte).replace("Aucune activité renseignée.", "—");
+}
+
+function comparaisonPremierDernier(journees, champs, titre) {
+  if (journees.length < 2) return "Comparaison disponible à partir de deux journées renseignées.";
+  const premier = journees[0].reponses, dernier = journees[journees.length - 1].reponses;
+  const elements = champs.map(function (champ) { return libelleValeur(premier[champ]) + " → " + libelleValeur(dernier[champ]); });
+  return titre + " : " + elements.join(" · ") + ".";
+}
+
+function tendanceNumerique(journees) {
+  if (journees.length < 2) return "Comparaison disponible à partir de deux journées renseignées.";
+  const premier = journees[0].reponses, dernier = journees[journees.length - 1].reponses;
+  return "Première → dernière journée renseignée : énergie " + premier.PY_ENERGIE + " → " + dernier.PY_ENERGIE + ", moral " + premier.PY_MORAL + " → " + dernier.PY_MORAL + ".";
+}
+
+function remarquePersonnelle(texte) {
+  return String(texte || "").split(" — ").filter(function (partie) {
+    return !partie.startsWith("Appétit de Thérèse :") && !partie.startsWith("Sommeil de Thérèse :");
+  }).join(" — ").trim();
+}
+
+function jourCourt(dateIso) {
+  if (!dateIso) return "Jour";
+  return new Intl.DateTimeFormat("fr-FR", { weekday: "long" }).format(new Date(dateIso + "T12:00:00"));
+}
+
+function echapperHtml(texte) {
+  return String(texte).replace(/[&<>"']/g, function (c) { return ({"&":"&amp;","<":"&lt;",">":"&gt;","\\\"":"&quot;","'":"&#039;"})[c]; });
 }
 
 function afficherPeriodeSemaine() {
