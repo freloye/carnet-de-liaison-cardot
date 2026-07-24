@@ -2,7 +2,7 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0016
+ Build : 0017
 *****************************************************************/
 
 "use strict";
@@ -15,6 +15,8 @@ function initialiser() {
   initialiserCurseurs();
   initialiserCourses();
   initialiserApplicationInstallable();
+  initialiserNavigation();
+  initialiserPrototypeHebdomadaire();
 
   const formulaire = document.getElementById("formulaireJournee");
 
@@ -33,7 +35,7 @@ function initialiserApplicationInstallable() {
 
   window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register("./service-worker.js?v=0016")
+      .register("./service-worker.js?v=0017")
       .catch(function (erreur) {
         console.warn("Service worker non enregistré :", erreur);
       });
@@ -631,4 +633,92 @@ function genererIdRequete() {
     "-" +
     aleatoire
   );
+}
+
+
+function initialiserNavigation() {
+  const boutons = document.querySelectorAll("[data-vue]");
+  const formulaire = document.getElementById("formulaireJournee");
+  const vueSemaine = document.getElementById("vueSemaine");
+
+  if (!boutons.length || !formulaire || !vueSemaine) {
+    return;
+  }
+
+  boutons.forEach(function (bouton) {
+    bouton.addEventListener("click", function () {
+      const vueDemandee = bouton.dataset.vue;
+      const afficherSemaine = vueDemandee === "semaine";
+
+      formulaire.hidden = afficherSemaine;
+      vueSemaine.hidden = !afficherSemaine;
+
+      boutons.forEach(function (autreBouton) {
+        const estActif = autreBouton === bouton;
+        autreBouton.classList.toggle("actif", estActif);
+        autreBouton.setAttribute("aria-current", estActif ? "page" : "false");
+      });
+
+      if (afficherSemaine) {
+        afficherPeriodeSemaine();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  });
+}
+
+function afficherPeriodeSemaine() {
+  const element = document.getElementById("periodeSemaine");
+
+  if (!element) {
+    return;
+  }
+
+  const aujourdHui = new Date();
+  const numeroJour = aujourdHui.getDay() || 7;
+  const lundi = new Date(aujourdHui);
+  lundi.setDate(aujourdHui.getDate() - numeroJour + 1);
+
+  const dimanche = new Date(lundi);
+  dimanche.setDate(lundi.getDate() + 6);
+
+  const formatCourt = new Intl.DateTimeFormat("fr-FR", {
+    day: "numeric",
+    month: "long"
+  });
+
+  element.textContent =
+    "Du " + formatCourt.format(lundi) +
+    " au " + formatCourt.format(dimanche);
+}
+
+function initialiserPrototypeHebdomadaire() {
+  const panneau = document.getElementById("detailPrototype");
+
+  if (!panneau) {
+    return;
+  }
+
+  document.querySelectorAll("[data-detail]").forEach(function (bouton) {
+    bouton.addEventListener("click", function () {
+      const type = bouton.dataset.detail;
+
+      if (type === "repas") {
+        panneau.innerHTML =
+          "<h3>Repas — jours concernés</h3>" +
+          "<p><strong>Plats élaborés :</strong> lundi midi, mardi soir, jeudi midi, vendredi soir et dimanche midi.</p>" +
+          "<p><strong>Restes réchauffés :</strong> mardi midi, jeudi soir et dimanche soir.</p>" +
+          "<p><strong>Barquettes cuisinées :</strong> lundi soir et vendredi midi.</p>";
+      } else {
+        panneau.innerHTML =
+          "<h3>Ménage — jours concernés</h3>" +
+          "<p><strong>Lundi :</strong> cuisine et salon.</p>" +
+          "<p><strong>Jeudi :</strong> cuisine, chambre de Thérèse et salle de bains.</p>" +
+          "<p><strong>Samedi :</strong> salon, cuisine et couloir / entrée.</p>";
+      }
+
+      panneau.hidden = false;
+      panneau.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  });
 }
