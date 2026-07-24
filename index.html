@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#eef2f4">
+  <meta name="theme-color" content="#315b4a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Carnet Cardot">
+  <link rel="manifest" href="manifest.webmanifest?v=0016">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>Carnet de liaison Cardot</title>
-  <link rel="stylesheet" href="styles.css?v=0007">
+  <link rel="stylesheet" href="styles.css?v=0016">
 </head>
 <body>
   <main class="app">
@@ -17,8 +24,8 @@
     </header>
 
     <form id="formulaireJournee" novalidate>
-      <section class="carte">
-        <h2>Début de journée</h2>
+      <section class="carte theme-demarrage">
+        <h2><span class="icone-rubrique" aria-hidden="true">🕘</span>Début de journée</h2>
 
         <fieldset>
           <legend>Heure de démarrage</legend>
@@ -75,8 +82,8 @@
         </fieldset>
       </section>
 
-      <section class="carte">
-        <h2>Situation de Thérèse</h2>
+      <section class="carte theme-therese">
+        <h2><span class="icone-rubrique" aria-hidden="true">👵</span>Situation de Thérèse</h2>
 
         <fieldset>
           <legend>Moral</legend>
@@ -124,8 +131,8 @@
         </fieldset>
       </section>
 
-      <section class="carte">
-        <h2>Repas et courses</h2>
+      <section class="carte theme-repas">
+        <h2><span class="icone-rubrique" aria-hidden="true">🍽️</span>Repas et courses</h2>
 
         <fieldset>
           <legend>Déjeuner</legend>
@@ -162,8 +169,8 @@
         </fieldset>
       </section>
 
-      <section class="carte">
-        <h2>Ménage</h2>
+      <section class="carte theme-menage">
+        <h2><span class="icone-rubrique" aria-hidden="true">🧹</span>Ménage</h2>
         <p class="aide">Sélectionne chaque action réellement effectuée dans chaque pièce.</p>
 
         <div class="table-menage" role="group" aria-label="Ménage par pièce et par action">
@@ -206,8 +213,8 @@
         </div>
       </section>
 
-      <section class="carte">
-        <h2>Linge</h2>
+      <section class="carte theme-linge">
+        <h2><span class="icone-rubrique" aria-hidden="true">👕</span>Linge</h2>
         <div class="grille-choix">
           <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="LESSIVE">Lessive lancée</button>
           <button type="button" class="choix multiple" data-groupe="LIN_ACTIVITES" data-valeur="ETENDAGE">Linge étendu</button>
@@ -218,8 +225,8 @@
         </div>
       </section>
 
-      <section class="carte">
-        <h2>Entretien extérieur</h2>
+      <section class="carte theme-exterieur">
+        <h2><span class="icone-rubrique" aria-hidden="true">🌿</span>Entretien extérieur</h2>
         <div class="grille-choix">
           <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="TONTE">Tonte</button>
           <button type="button" class="choix multiple" data-groupe="EXT_ACTIVITES" data-valeur="DESHERBAGE">Désherbage</button>
@@ -230,8 +237,8 @@
         </div>
       </section>
 
-      <section class="carte">
-        <h2>Autres activités</h2>
+      <section class="carte theme-autres">
+        <h2><span class="icone-rubrique" aria-hidden="true">📋</span>Autres activités</h2>
         <div class="grille-choix">
           <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="BRICOLAGE">Bricolage</button>
           <button type="button" class="choix multiple" data-groupe="AUT_ACTIVITES" data-valeur="DEMARCHES">Démarches administratives et médicales</button>
@@ -243,8 +250,8 @@
         </div>
       </section>
 
-      <section class="carte">
-        <h2>Mon regard sur ma journée</h2>
+      <section class="carte theme-pierre-yves">
+        <h2><span class="icone-rubrique" aria-hidden="true">🙂</span>Mon regard sur ma journée</h2>
 
         <div class="champ-range">
           <label for="energiePY">
@@ -272,8 +279,8 @@
         </fieldset>
       </section>
 
-      <section class="carte">
-        <h2>Suivi et pense-bête</h2>
+      <section class="carte theme-suivi">
+        <h2><span class="icone-rubrique" aria-hidden="true">📝</span>Suivi et pense-bête</h2>
 
         <fieldset>
           <legend>Y a-t-il un problème ?</legend>
@@ -319,7 +326,7 @@
     </form>
   </main>
 
-  <script src="config.js?v=0010"></script>
-  <script src="app.js?v=0015"></script>
+  <script src="config.js?v=0016"></script>
+  <script src="app.js?v=0016"></script>
 </body>
 </html>
