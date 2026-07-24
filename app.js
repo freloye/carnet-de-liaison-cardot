@@ -2,7 +2,7 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0015
+ Build : 0016
 *****************************************************************/
 
 "use strict";
@@ -14,6 +14,7 @@ function initialiser() {
   initialiserChoix();
   initialiserCurseurs();
   initialiserCourses();
+  initialiserApplicationInstallable();
 
   const formulaire = document.getElementById("formulaireJournee");
 
@@ -23,6 +24,20 @@ function initialiser() {
   }
 
   formulaire.addEventListener("submit", soumettre);
+}
+
+function initialiserApplicationInstallable() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("./service-worker.js?v=0016")
+      .catch(function (erreur) {
+        console.warn("Service worker non enregistré :", erreur);
+      });
+  });
 }
 
 function afficherEntete() {
