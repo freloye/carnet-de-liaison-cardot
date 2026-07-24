@@ -12,7 +12,7 @@ Cette première version contient :
 - les tendances concernant Thérèse ;
 - les indicateurs de Pierre-Yves ;
 - une remarque facultative ;
-- aucune transmission vers Apps Script à ce stade.
+- aucune transmission vers Apps Script à ce stade. 
 
 ## Fichiers
 
