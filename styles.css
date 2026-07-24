@@ -245,7 +245,7 @@ textarea:focus-visible, .bouton-principal:focus-visible {
 }
 
 
-/* Navigation et synthèse hebdomadaire réelle — build 0018 */
+/* Navigation et synthèse hebdomadaire réelle — build 0019 */
 .navigation-principale {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -334,3 +334,23 @@ textarea:focus-visible, .bouton-principal:focus-visible {
   .liste-simple { grid-template-columns: 1fr; }
   .entete-vue { align-items: center; }
 }
+
+
+/* Synthèse hebdomadaire complète — build 0019 */
+.theme-linge { --theme-accent: #8b5e3c; --theme-soft: #f8f1eb; }
+.theme-exterieur { --theme-accent: #4f772d; --theme-soft: #eef6e8; }
+.theme-courses { --theme-accent: #9a6700; --theme-soft: #fff6d9; }
+.theme-autres { --theme-accent: #6b5b95; --theme-soft: #f2eff8; }
+.theme-demarches { --theme-accent: #3f6f8f; --theme-soft: #edf5fa; }
+.theme-therese { --theme-accent: #9b5d73; --theme-soft: #f9eef2; }
+.theme-suivi { --theme-accent: #755c28; --theme-soft: #f8f3e8; }
+.grille-indicateurs.trois { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.resume-tendance, .repartition-texte { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--theme-soft); color: #44515a; font-size: .82rem; font-weight: 700; line-height: 1.45; }
+.observations-grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 13px; }
+.observations-grille div { padding: 11px; border-radius: 11px; background: var(--theme-soft); }
+.observations-grille strong, .observations-grille span { display: block; }
+.observations-grille span { margin-top: 5px; font-size: .78rem; line-height: 1.35; }
+.liste-remarques { margin-top: 12px; padding: 10px 12px; border-radius: 11px; background: var(--theme-soft); }
+.liste-remarques p { margin: 0 0 7px; font-size: .82rem; line-height: 1.4; }
+.liste-remarques p:last-child { margin-bottom: 0; }
+@media (max-width: 560px) { .grille-indicateurs.trois, .observations-grille { grid-template-columns: 1fr; } }
