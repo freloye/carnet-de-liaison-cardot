@@ -243,3 +243,94 @@ textarea:focus-visible, .bouton-principal:focus-visible {
   outline: 3px solid rgba(49,91,74,.28);
   outline-offset: 2px;
 }
+
+
+/* Navigation et prototype de synthèse hebdomadaire — build 0017 */
+.navigation-principale {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 6px;
+  border-radius: 16px;
+  background: #dfe7e3;
+}
+
+.bouton-navigation {
+  min-height: 52px;
+  padding: 9px 12px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #315b4a;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bouton-navigation.actif {
+  border-color: #315b4a;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(49, 91, 74, .12);
+}
+
+.vue-application[hidden] { display: none !important; }
+
+.entete-vue {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.entete-vue h2 { margin: 3px 0 0; font-size: 1.45rem; }
+.sur-titre { margin: 0; color: #586773; font-size: .8rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; }
+.badge-prototype { padding: 6px 9px; border-radius: 999px; background: #fff0d8; color: #8a3e08; font-size: .72rem; font-weight: 900; }
+.avertissement-prototype { margin: 0 0 14px; padding: 12px; border-left: 5px solid #d97706; border-radius: 10px; background: #fff8ec; color: #70420d; font-size: .88rem; font-weight: 700; }
+
+.carte-synthese {
+  --theme-accent: #607d8b;
+  --theme-soft: #f2f5f6;
+  margin-bottom: 14px;
+  padding: 15px;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 28%, #d4dce2);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(31, 41, 51, .07);
+}
+
+.carte-jours { --theme-accent: #596b79; --theme-soft: #edf1f4; }
+.titre-synthese { display: flex; align-items: center; gap: 10px; }
+.titre-synthese h3 { margin: 0 0 3px; color: color-mix(in srgb, var(--theme-accent) 80%, #1f2933); font-size: 1.2rem; }
+.titre-synthese p { margin: 0; color: #65717b; font-size: .84rem; }
+.indicateur-principal { margin: 15px 0 10px; font-weight: 800; }
+.indicateur-principal strong { margin-right: 4px; font-size: 1.65rem; color: var(--theme-accent); }
+
+.jours-semaine { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.jour { min-width: 0; padding: 9px 2px; border-radius: 10px; text-align: center; font-size: .72rem; font-weight: 900; }
+.jour.renseigne { background: var(--vert-fond); color: var(--vert-texte); }
+.jour.non-renseigne { background: #eef0f2; color: #69737d; }
+
+.grille-indicateurs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.grille-indicateurs.deux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.indicateur { padding: 12px 8px; border-radius: 13px; background: var(--theme-soft); text-align: center; }
+.indicateur strong { display: block; margin-bottom: 4px; color: var(--theme-accent); font-size: 1.55rem; }
+.indicateur span { display: block; font-size: .75rem; font-weight: 800; }
+.indicateur.vigilance { background: var(--orange-fond); }
+.indicateur.vigilance strong, .indicateur.vigilance span { color: var(--orange-texte); }
+
+.liste-simple { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
+.liste-simple span { padding: 9px; border-radius: 10px; background: var(--theme-soft); font-size: .78rem; font-weight: 800; }
+
+.bouton-detail { width: 100%; min-height: 48px; margin-top: 12px; border: 2px solid var(--theme-accent); border-radius: 12px; background: #fff; color: var(--theme-accent); font-weight: 900; cursor: pointer; }
+.panneau-detail { margin: 4px 0 18px; padding: 15px; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px rgba(31, 41, 51, .08); }
+.panneau-detail h3 { margin-top: 0; }
+.panneau-detail p { margin-bottom: 8px; }
+
+@media (max-width: 560px) {
+  .navigation-principale { grid-template-columns: 1fr; }
+  .grille-indicateurs { grid-template-columns: 1fr; }
+  .grille-indicateurs.deux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .liste-simple { grid-template-columns: 1fr; }
+  .entete-vue { align-items: center; }
+}
