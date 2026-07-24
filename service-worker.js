@@ -1,11 +1,11 @@
-const CACHE_NAME = "carnet-cardot-v0017";
+const CACHE_NAME = "carnet-cardot-v0018";
 const RESSOURCES = [
   "./",
   "./index.html",
-  "./styles.css?v=0017",
-  "./config.js?v=0017",
-  "./app.js?v=0017",
-  "./manifest.webmanifest?v=0017",
+  "./styles.css?v=0018",
+  "./config.js?v=0018",
+  "./app.js?v=0018",
+  "./manifest.webmanifest?v=0018",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
