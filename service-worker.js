@@ -1,11 +1,11 @@
-const CACHE_NAME = "carnet-cardot-v0019";
+const CACHE_NAME = "carnet-cardot-v0020";
 const RESSOURCES = [
   "./",
   "./index.html",
-  "./styles.css?v=0019",
-  "./config.js?v=0019",
-  "./app.js?v=0019",
-  "./manifest.webmanifest?v=0019",
+  "./styles.css?v=0020",
+  "./config.js?v=0020",
+  "./app.js?v=0020",
+  "./manifest.webmanifest?v=0020",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
@@ -51,4 +51,3 @@ self.addEventListener("fetch", function (event) {
       })
   );
 });
-
