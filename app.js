@@ -1057,3 +1057,10 @@ function libelleValeur(valeur) {
     .replace(/_/g, " ")
     .toLowerCase();
 }
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .catch((err) => console.error("Service Worker :", err));
+  });
+}
