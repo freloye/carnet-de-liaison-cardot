@@ -836,6 +836,13 @@ function calculerMoyennes(journees) {
 
 
 function actualiserSyntheseComplete(journees) {
+  const demarrages = {};
+  journees.forEach(function (j) {
+    const valeur = j.reponses.DEM_DEMARRAGE;
+    if (valeur) demarrages[valeur] = (demarrages[valeur] || 0) + 1;
+  });
+  affecterTexte("repartitionDemarrage", Object.keys(demarrages).length ? repartitionLibelle(demarrages) : "Aucune heure renseignée.");
+  affecterTexte("tendanceDemarrage", comparaisonPremierDernier(journees, ["DEM_DEMARRAGE"], "Première et dernière journée renseignées"));
   const linge = compterActions(journees, "LIN_ACTIVITES", ["AUCUN"]);
   affecterTexte("totalActionsLinge", linge.total);
   affecterTexte("lingeLessive", linge.parValeur.LESSIVE || 0);
@@ -855,15 +862,15 @@ function actualiserSyntheseComplete(journees) {
   affecterTexte("montantCoursesSemaine", montants.length ? montants.reduce(function (a, b) { return a + b; }, 0).toFixed(2).replace(".", ",") + " €" : "—");
   affecterTexte("tendanceCourses", phraseRegularite(joursCourses.length, journees.length));
 
-  const autres = compterActions(journees, "AUT_ACTIVITES", ["AUCUNE", "DEMARCHES", "COURRIER"]);
+  const autres = compterActions(journees, "AUT_ACTIVITES", ["AUCUNE"]);
   affecterTexte("totalAutresActivites", autres.total);
-  affecterTexte("repartitionAutres", repartitionLibelle(autres.parValeur));
-
-  const joursDemarches = compterJoursAvecValeur(journees, "AUT_ACTIVITES", "DEMARCHES");
-  const joursCourrier = compterJoursAvecValeur(journees, "AUT_ACTIVITES", "COURRIER");
-  affecterTexte("joursDemarches", joursDemarches);
-  affecterTexte("joursCourrier", joursCourrier);
-  affecterTexte("tendanceDemarches", "Répartition : " + joursDemarches + " jour(s) avec démarches, " + joursCourrier + " jour(s) avec courrier.");
+  affecterTexte("autBricolage", autres.parValeur.BRICOLAGE || 0);
+  affecterTexte("joursDemarches", autres.parValeur.DEMARCHES || 0);
+  affecterTexte("joursCourrier", autres.parValeur.COURRIER || 0);
+  affecterTexte("autRendezVous", autres.parValeur.RENDEZ_VOUS || 0);
+  affecterTexte("autAccompagnementTherese", autres.parValeur.ACCOMPAGNEMENT_THERESE || 0);
+  affecterTexte("autEntretienEquipement", autres.parValeur.ENTRETIEN_EQUIPEMENT || 0);
+  affecterTexte("tendanceAutres", phraseRegularite(autres.jours, journees.length));
 
   affecterTexte("thereseMoral", distributionChamp(journees, "THE_MORAL"));
   affecterTexte("thereseSante", distributionChamp(journees, "THE_SANTE"));
@@ -1019,6 +1026,32 @@ function libelleListe(valeurs) {
 
 function libelleValeur(valeur) {
   if (!valeur) return "non renseigné";
+  const libelles = {
+    DEM_0900: "9 h 00",
+    DEM_0930: "9 h 30",
+    DEM_1000: "10 h 00",
+    DEM_1030: "10 h 30",
+    DEM_1100: "11 h 00",
+    DEM_APRES_1100: "Après 11 h",
+    PLAT_MIJOTE: "plat élaboré par moi-même",
+    RESTE_RECHAUFFE: "restes réchauffés",
+    PLAT_ACHETE: "barquette cuisinée",
+    MOINS_BIEN: "moins bien qu’hier",
+    HABITUEL: "comme d’habitude",
+    MIEUX: "mieux qu’hier",
+    PLUS_DIFFICILE: "plus difficile",
+    PLUS_FACILE: "plus facile",
+    DIFFICILE: "difficile",
+    MOYEN: "moyen",
+    BIEN: "bien",
+    BRICOLAGE: "bricolage",
+    DEMARCHES: "démarches administratives et médicales",
+    COURRIER: "gestion du courrier",
+    RENDEZ_VOUS: "rendez-vous",
+    ACCOMPAGNEMENT_THERESE: "accompagnement de Thérèse",
+    ENTRETIEN_EQUIPEMENT: "entretien d’un équipement"
+  };
+  if (libelles[valeur]) return libelles[valeur];
   return String(valeur)
     .replace(/^[A-Z]{3}_/, "")
     .replace(/_/g, " ")
