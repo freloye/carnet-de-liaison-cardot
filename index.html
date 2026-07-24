@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Carnet Cardot">
-  <link rel="manifest" href="manifest.webmanifest?v=0016">
+  <link rel="manifest" href="manifest.webmanifest?v=0017">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>Carnet de liaison Cardot</title>
-  <link rel="stylesheet" href="styles.css?v=0016">
+  <link rel="stylesheet" href="styles.css?v=0017">
 </head>
 <body>
   <main class="app">
@@ -23,7 +23,97 @@
       <p class="date" id="dateJournee"></p>
     </header>
 
-    <form id="formulaireJournee" novalidate>
+
+    <nav class="navigation-principale" aria-label="Navigation du carnet">
+      <button type="button" class="bouton-navigation actif" data-vue="saisie">Renseigner ma journée</button>
+      <button type="button" class="bouton-navigation" data-vue="semaine">Cette semaine</button>
+    </nav>
+
+    <section id="vueSemaine" class="vue-application" hidden>
+      <div class="entete-vue">
+        <div>
+          <p class="sur-titre">Synthèse hebdomadaire</p>
+          <h2 id="periodeSemaine">Semaine en cours</h2>
+        </div>
+        <span class="badge-prototype">Prototype</span>
+      </div>
+
+      <p class="avertissement-prototype">
+        Données de démonstration pour tester la présentation. La connexion aux données réelles sera ajoutée dans le lot suivant.
+      </p>
+
+      <section class="carte-synthese carte-jours">
+        <div class="titre-synthese">
+          <span class="icone-rubrique" aria-hidden="true">📅</span>
+          <div>
+            <h3>Journées renseignées</h3>
+            <p>Un point de départ pour la discussion, sans interprétation automatique.</p>
+          </div>
+        </div>
+        <p class="indicateur-principal"><strong>5</strong> jours sur 7</p>
+        <div class="jours-semaine" aria-label="Jours renseignés dans la semaine">
+          <span class="jour renseigne">Lun</span>
+          <span class="jour renseigne">Mar</span>
+          <span class="jour non-renseigne">Mer</span>
+          <span class="jour renseigne">Jeu</span>
+          <span class="jour renseigne">Ven</span>
+          <span class="jour non-renseigne">Sam</span>
+          <span class="jour renseigne">Dim</span>
+        </div>
+      </section>
+
+      <section class="carte-synthese theme-repas">
+        <div class="titre-synthese">
+          <span class="icone-rubrique" aria-hidden="true">🍽️</span>
+          <div>
+            <h3>Repas</h3>
+            <p>Comment se sont organisés les repas cette semaine ?</p>
+          </div>
+        </div>
+        <div class="grille-indicateurs">
+          <div class="indicateur"><strong>5</strong><span>Plats élaborés</span></div>
+          <div class="indicateur"><strong>3</strong><span>Restes réchauffés</span></div>
+          <div class="indicateur vigilance"><strong>2</strong><span>Barquettes cuisinées</span></div>
+        </div>
+        <button type="button" class="bouton-detail" data-detail="repas">Voir les jours concernés</button>
+      </section>
+
+      <section class="carte-synthese theme-menage">
+        <div class="titre-synthese">
+          <span class="icone-rubrique" aria-hidden="true">🧹</span>
+          <div>
+            <h3>Ménage</h3>
+            <p>Comment l’entretien du logement s’est-il réparti ?</p>
+          </div>
+        </div>
+        <p class="indicateur-principal"><strong>8</strong> actions réalisées</p>
+        <div class="liste-simple">
+          <span>Cuisine : 3</span>
+          <span>Salon / séjour : 2</span>
+          <span>Chambre de Thérèse : 1</span>
+          <span>Autres espaces : 2</span>
+        </div>
+        <button type="button" class="bouton-detail" data-detail="menage">Voir les jours concernés</button>
+      </section>
+
+      <section class="carte-synthese theme-pierre-yves">
+        <div class="titre-synthese">
+          <span class="icone-rubrique" aria-hidden="true">🙂</span>
+          <div>
+            <h3>Mon regard sur la semaine</h3>
+            <p>Cette partie restera descriptive pendant les premières semaines.</p>
+          </div>
+        </div>
+        <div class="grille-indicateurs deux">
+          <div class="indicateur"><strong>6,4</strong><span>Énergie moyenne</span></div>
+          <div class="indicateur"><strong>6,8</strong><span>Moral moyen</span></div>
+        </div>
+      </section>
+
+      <div id="detailPrototype" class="panneau-detail" hidden aria-live="polite"></div>
+    </section>
+
+    <form id="formulaireJournee" class="vue-application" novalidate>
       <section class="carte theme-demarrage">
         <h2><span class="icone-rubrique" aria-hidden="true">🕘</span>Début de journée</h2>
 
@@ -326,7 +416,8 @@
     </form>
   </main>
 
-  <script src="config.js?v=0016"></script>
-  <script src="app.js?v=0016"></script>
+  <script src="config.js?v=0017"></script>
+  <script src="app.js?v=0017"></script>
 </body>
 </html>
+
