@@ -2,10 +2,14 @@
  Projet : Carnet de liaison Cardot
  Fichier : app.js
  Version : V1.0 TEST
- Build : 0019
+ Build : 0021
 *****************************************************************/
 
 "use strict";
+
+const APPLICATION_ID = "APP_CARNET_CARDOT";
+const ENVIRONNEMENT = "TEST";
+let journalSemaineServeur = {};
 
 document.addEventListener("DOMContentLoaded", initialiser);
 
@@ -35,7 +39,7 @@ function initialiserApplicationInstallable() {
 
   window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register("./service-worker.js?v=0019")
+      .register("./service-worker.js?v=0021", { updateViaCache: "none" })
       .catch(function (erreur) {
         console.warn("Service worker non enregistré :", erreur);
       });
@@ -195,118 +199,37 @@ async function soumettre(evenement) {
     verifierConfiguration();
 
     const payload = construirePayload();
-
     validerPayload(payload);
 
-    definirEtat(
-      true,
-      "Envoi en cours…",
-      "information"
+    definirEtat(true, "Envoi en cours…", "information");
+
+    const sessionExistante = await trouverSessionActivePourDate(
+      payload.dateSaisie
     );
 
-  const requeteApi = {
-  action: "CREER_SESSION",
-
-  donnees: {
-    payload: {
-      applicationId: "APP_CARNET_CARDOT",
-      versionReferentiel: "V1.0.0",
-      buildReferentiel: "0001",
-      environnement: "TEST",
-      dateSaisie: payload.dateSaisie,
-      idRequete: payload.idRequete,
-      contexte: payload.contexte,
-      reponses: payload.reponses
-    }
-  },
-
-  options: {
-    auteur: "PIERRE_YVES"
-  },
-
-  idRequeteApi: genererIdRequeteApi()
-};
+    const requeteApi = sessionExistante
+      ? construireRequeteModification(sessionExistante.idSession, payload)
+      : construireRequeteCreation(payload);
 
     console.log(
       "Requête envoyée au Framework :",
       JSON.stringify(requeteApi, null, 2)
     );
 
-    const reponse = await fetch(CONFIG.API_URL, {
-      method: "POST",
-      redirect: "follow",
+    const resultat = await appelerApi(requeteApi);
 
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-
-      body: JSON.stringify(requeteApi)
-    });
-
-    const texte = await reponse.text();
-
-    console.log("Réponse brute du serveur :", texte);
-
-    let resultat;
-
-    try {
-      resultat = JSON.parse(texte);
-    } catch (erreurJson) {
-      throw new Error(
-        "La réponse du serveur n’est pas exploitable."
-      );
-    }
-
-    if (
-      !reponse.ok ||
-      !resultat ||
-      resultat.ok !== true
-    ) {
-      console.error(
-        "Réponse complète du serveur :",
-        resultat
-      );
-
-      const erreurs =
-        resultat.erreurs ||
-        resultat.resultat?.erreurs ||
-        resultat.donnees?.erreurs ||
-        resultat.details?.erreurs ||
-        [];
-
-      const detailErreurs = Array.isArray(erreurs)
-        ? erreurs
-            .map(function (erreur) {
-              if (typeof erreur === "string") {
-                return erreur;
-              }
-
-              return [
-                erreur.code,
-                erreur.chemin || erreur.champ,
-                erreur.message
-              ]
-                .filter(Boolean)
-                .join(" — ");
-            })
-            .filter(Boolean)
-            .join(" | ")
-        : "";
-
-      throw new Error(
-        detailErreurs ||
-        resultat.message ||
-        resultat.resultat?.message ||
-        resultat.code ||
-        "VALIDATION_ECHOUEE"
-      );
-    }
-
-    enregistrerJourneeLocale(payload);
+    journalSemaineServeur[payload.dateSaisie] = {
+      dateSaisie: payload.dateSaisie,
+      reponses: payload.reponses,
+      idSession: resultat.idSession || (sessionExistante && sessionExistante.idSession) || "",
+      revisionCourante: Number(resultat.revision || 1)
+    };
 
     definirEtat(
       false,
-      "Journée enregistrée avec succès.",
+      sessionExistante
+        ? "Journée mise à jour avec succès."
+        : "Journée enregistrée avec succès.",
       "succes"
     );
   } catch (erreur) {
@@ -321,16 +244,168 @@ async function soumettre(evenement) {
 
   function definirEtat(enCours, texte, type) {
     bouton.disabled = enCours;
-
     bouton.textContent = enCours
       ? "Envoi en cours…"
       : "Valider la journée";
-
     message.textContent = texte;
     message.dataset.type = type;
   }
 }
 
+function construirePayloadApi(payload) {
+  return {
+    applicationId: APPLICATION_ID,
+    versionReferentiel: "V1.0.0",
+    buildReferentiel: "0001",
+    environnement: ENVIRONNEMENT,
+    dateSaisie: payload.dateSaisie,
+    idRequete: payload.idRequete,
+    contexte: payload.contexte,
+    reponses: payload.reponses
+  };
+}
+
+function construireRequeteCreation(payload) {
+  return {
+    action: "CREER_SESSION",
+    donnees: {
+      payload: construirePayloadApi(payload)
+    },
+    options: {
+      auteur: "PIERRE_YVES"
+    },
+    idRequeteApi: genererIdRequeteApi()
+  };
+}
+
+function construireRequeteModification(idSession, payload) {
+  return {
+    action: "MODIFIER_SESSION",
+    donnees: {
+      idSession: idSession,
+      payload: construirePayloadApi(payload)
+    },
+    options: {
+      auteur: "PIERRE_YVES"
+    },
+    idRequeteApi: genererIdRequeteApi()
+  };
+}
+
+async function appelerApi(requeteApi) {
+  const reponse = await fetch(CONFIG.API_URL, {
+    method: "POST",
+    redirect: "follow",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(requeteApi)
+  });
+
+  const texte = await reponse.text();
+  console.log("Réponse brute du serveur :", texte);
+
+  let resultat;
+  try {
+    resultat = JSON.parse(texte);
+  } catch (erreurJson) {
+    throw new Error("La réponse du serveur n’est pas exploitable.");
+  }
+
+  if (!reponse.ok || !resultat || resultat.ok !== true) {
+    const erreurs =
+      resultat && (
+        resultat.erreurs ||
+        (resultat.resultat && resultat.resultat.erreurs) ||
+        (resultat.donnees && resultat.donnees.erreurs) ||
+        (resultat.details && resultat.details.erreurs)
+      ) || [];
+
+    const detailErreurs = Array.isArray(erreurs)
+      ? erreurs.map(function (erreur) {
+          if (typeof erreur === "string") return erreur;
+          return [erreur.code, erreur.chemin || erreur.champ, erreur.message]
+            .filter(Boolean)
+            .join(" — ");
+        }).filter(Boolean).join(" | ")
+      : "";
+
+    throw new Error(
+      detailErreurs ||
+      (resultat && resultat.message) ||
+      (resultat && resultat.resultat && resultat.resultat.message) ||
+      (resultat && resultat.code) ||
+      "ERREUR_API"
+    );
+  }
+
+  return resultat;
+}
+
+async function trouverSessionActivePourDate(dateSaisie) {
+  const resultat = await appelerApi({
+    action: "LISTER_SESSIONS",
+    donnees: {
+      filtres: {
+        applicationId: APPLICATION_ID,
+        dateDebut: dateSaisie,
+        dateFin: dateSaisie,
+        statut: "ACTIVE"
+      }
+    },
+    idRequeteApi: genererIdRequeteApi()
+  });
+
+  const candidates = Array.isArray(resultat.sessions)
+    ? resultat.sessions.filter(function (session) {
+        return normaliserDateServeur(session.dateSaisie) === dateSaisie;
+      })
+    : [];
+
+  if (!candidates.length) return null;
+
+  const lectures = await Promise.all(
+    candidates.map(async function (session) {
+      const lecture = await appelerApi({
+        action: "LIRE_SESSION",
+        donnees: { idSession: session.idSession },
+        idRequeteApi: genererIdRequeteApi()
+      });
+      return lecture.session || null;
+    })
+  );
+
+  const sessions = lectures.filter(function (session) {
+    return session &&
+      session.applicationId === APPLICATION_ID &&
+      session.environnement === ENVIRONNEMENT &&
+      normaliserDateServeur(session.dateSaisie) === dateSaisie &&
+      session.statut === "ACTIVE";
+  });
+
+  if (!sessions.length) return null;
+
+  sessions.sort(function (a, b) {
+    const dateA = Date.parse(a.modifieLe || a.creeLe || "") || 0;
+    const dateB = Date.parse(b.modifieLe || b.creeLe || "") || 0;
+    if (dateA !== dateB) return dateB - dateA;
+    return Number(b.revisionCourante || 0) - Number(a.revisionCourante || 0);
+  });
+
+  return sessions[0];
+}
+
+function normaliserDateServeur(valeur) {
+  if (!valeur) return "";
+  const texte = String(valeur);
+  const correspondance = texte.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (correspondance) {
+    return correspondance[1] + "-" + correspondance[2] + "-" + correspondance[3];
+  }
+  const date = new Date(valeur);
+  return isNaN(date.getTime()) ? texte : dateIsoLocale(date);
+}
 
 function construirePayload() {
   const remarque = construireRemarqueComplete();
@@ -676,29 +751,84 @@ function initialiserSyntheseHebdomadaire() {
   });
 }
 
-function enregistrerJourneeLocale(payload) {
-  try {
-    const cle = "carnetCardotJourneesV1";
-    const journal = JSON.parse(localStorage.getItem(cle) || "{}");
-    journal[payload.dateSaisie] = {
-      dateSaisie: payload.dateSaisie,
-      reponses: payload.reponses,
-      enregistreeLe: new Date().toISOString()
-    };
-    localStorage.setItem(cle, JSON.stringify(journal));
-  } catch (erreur) {
-    console.warn("Sauvegarde locale impossible :", erreur);
-  }
-}
+async function chargerJourneesSemaineDepuisServeur() {
+  verifierConfiguration();
 
-function lireJourneesLocales() {
-  try {
-    const journal = JSON.parse(localStorage.getItem("carnetCardotJourneesV1") || "{}");
-    return journal && typeof journal === "object" ? journal : {};
-  } catch (erreur) {
-    console.warn("Lecture locale impossible :", erreur);
-    return {};
-  }
+  const bornes = bornesSemaine(new Date());
+  const dateDebut = dateIsoLocale(bornes.lundi);
+  const dateFin = dateIsoLocale(bornes.dimanche);
+
+  const liste = await appelerApi({
+    action: "LISTER_SESSIONS",
+    donnees: {
+      filtres: {
+        applicationId: APPLICATION_ID,
+        dateDebut: dateDebut,
+        dateFin: dateFin,
+        statut: "ACTIVE"
+      }
+    },
+    idRequeteApi: genererIdRequeteApi()
+  });
+
+  const candidates = Array.isArray(liste.sessions) ? liste.sessions : [];
+
+  const lectures = await Promise.all(
+    candidates.map(async function (session) {
+      const lecture = await appelerApi({
+        action: "LIRE_SESSION",
+        donnees: {
+          idSession: session.idSession
+        },
+        idRequeteApi: genererIdRequeteApi()
+      });
+      return lecture.session || null;
+    })
+  );
+
+  const parDate = {};
+
+  lectures.filter(function (session) {
+    return session &&
+      session.applicationId === APPLICATION_ID &&
+      session.environnement === ENVIRONNEMENT &&
+      session.statut === "ACTIVE";
+  }).forEach(function (session) {
+    const date = normaliserDateServeur(session.dateSaisie);
+    if (!date || date < dateDebut || date > dateFin) return;
+
+    const precedente = parDate[date];
+    if (!precedente) {
+      parDate[date] = session;
+      return;
+    }
+
+    const dateCourante = Date.parse(session.modifieLe || session.creeLe || "") || 0;
+    const datePrecedente = Date.parse(precedente.modifieLe || precedente.creeLe || "") || 0;
+
+    if (
+      dateCourante > datePrecedente ||
+      (dateCourante === datePrecedente &&
+        Number(session.revisionCourante || 0) > Number(precedente.revisionCourante || 0))
+    ) {
+      parDate[date] = session;
+    }
+  });
+
+  const journal = {};
+  Object.keys(parDate).forEach(function (date) {
+    const session = parDate[date];
+    journal[date] = {
+      dateSaisie: date,
+      reponses: session.reponses || {},
+      idSession: session.idSession,
+      revisionCourante: Number(session.revisionCourante || 0),
+      modifieLe: session.modifieLe || ""
+    };
+  });
+
+  journalSemaineServeur = journal;
+  return journal;
 }
 
 function bornesSemaine(dateReference) {
@@ -729,10 +859,24 @@ function joursSemaineCourante() {
   });
 }
 
-function actualiserSyntheseHebdomadaire() {
+async function actualiserSyntheseHebdomadaire() {
   afficherPeriodeSemaine();
 
-  const journal = lireJourneesLocales();
+  const message = document.getElementById("messageDonneesSemaine");
+  if (message) {
+    message.textContent = "Chargement des données serveur…";
+  }
+
+  let journal;
+  try {
+    journal = await chargerJourneesSemaineDepuisServeur();
+  } catch (erreur) {
+    console.error("Chargement de la synthèse impossible :", erreur);
+    journal = {};
+    if (message) {
+      message.textContent = "Impossible de charger la synthèse depuis le serveur : " + erreur.message;
+    }
+  }
   const jours = joursSemaineCourante();
   const journees = jours.map(function (date) {
     return journal[dateIsoLocale(date)] || null;
@@ -779,11 +923,10 @@ function actualiserSyntheseHebdomadaire() {
 
   actualiserSyntheseComplete(renseignees);
 
-  const message = document.getElementById("messageDonneesSemaine");
-  if (message) {
+  if (message && !message.textContent.startsWith("Impossible")) {
     message.textContent = renseignees.length
-      ? "Synthèse calculée à partir des journées validées sur cet appareil."
-      : "Aucune journée de cette semaine n’a encore été validée sur cet appareil.";
+      ? "Synthèse synchronisée avec les journées validées sur le serveur."
+      : "Aucune journée de cette semaine n’a encore été validée sur le serveur.";
   }
 }
 
@@ -974,7 +1117,7 @@ function afficherPeriodeSemaine() {
 }
 
 function afficherDetailJournee(dateIso) {
-  const journal = lireJourneesLocales();
+  const journal = journalSemaineServeur;
   const journee = journal[dateIso];
   const panneau = document.getElementById("detailSemaine");
   if (!panneau) return;
@@ -995,7 +1138,7 @@ function afficherDetailJournee(dateIso) {
 }
 
 function afficherDetailHebdomadaire(type) {
-  const journal = lireJourneesLocales();
+  const journal = journalSemaineServeur;
   const jours = joursSemaineCourante();
   const lignes = [];
   jours.forEach(function (date) {
@@ -1056,11 +1199,4 @@ function libelleValeur(valeur) {
     .replace(/^[A-Z]{3}_/, "")
     .replace(/_/g, " ")
     .toLowerCase();
-}
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .catch((err) => console.error("Service Worker :", err));
-  });
 }
