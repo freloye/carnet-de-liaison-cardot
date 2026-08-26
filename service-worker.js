@@ -1,11 +1,11 @@
-const CACHE_NAME = "carnet-cardot-v0020";
+onst CACHE_NAME = "carnet-cardot-v0021";
 const RESSOURCES = [
   "./",
   "./index.html",
-  "./styles.css?v=0020",
-  "./config.js?v=0020",
-  "./app.js?v=0020",
-  "./manifest.webmanifest?v=0020",
+  "./styles.css?v=0021",
+  "./config.js?v=0021",
+  "./app.js?v=0021",
+  "./manifest.webmanifest?v=0021",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
@@ -21,27 +21,37 @@ self.addEventListener("install", function (event) {
 
 self.addEventListener("activate", function (event) {
   event.waitUntil(
-    caches.keys().then(function (noms) {
-      return Promise.all(
-        noms
-          .filter(function (nom) { return nom !== CACHE_NAME; })
-          .map(function (nom) { return caches.delete(nom); })
-      );
-    })
+    Promise.all([
+      caches.keys().then(function (noms) {
+        return Promise.all(
+          noms
+            .filter(function (nom) { return nom !== CACHE_NAME; })
+            .map(function (nom) { return caches.delete(nom); })
+        );
+      }),
+      self.clients.claim()
+    ])
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
 
+  const url = new URL(event.request.url);
+
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then(function (reponse) {
-        const copie = reponse.clone();
-        caches.open(CACHE_NAME).then(function (cache) {
-          cache.put(event.request, copie);
-        });
+        if (reponse && reponse.ok) {
+          const copie = reponse.clone();
+          caches.open(CACHE_NAME).then(function (cache) {
+            cache.put(event.request, copie);
+          });
+        }
         return reponse;
       })
       .catch(function () {
